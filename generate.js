@@ -5,6 +5,7 @@ const fs = require("fs");
 const path = require("path");
 const RIG = require("./js/rig.js");
 const OUT = __dirname;
+const V = Date.now().toString(36); // cache-buster so browsers fetch fresh CSS/JS after each update
 
 const WA_NUM = "919711013282";
 const wa = (text) => `https://wa.me/${WA_NUM}?text=${encodeURIComponent(text)}`;
@@ -93,7 +94,7 @@ function head(title, desc, p) {
 <link rel="icon" href="${p}images/logo-blue.jpg">
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600&family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;0,9..144,500;1,9..144,300;1,9..144,400&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="${p}css/site.css">
+<link rel="stylesheet" href="${p}css/site.css?v=${V}">
 </head>
 <body>
 <svg width="0" height="0" style="position:absolute" aria-hidden="true">${SYM}</svg>`;
@@ -130,9 +131,9 @@ function footer(p) {
 <div><h4>Follow</h4><ul><li><a href="${IG}" ${ext}>Instagram · @sudipta03</a></li><li><a href="${IG_GOA}" ${ext}>Instagram · @goaparkour</a></li><li><a href="${YT}" ${ext}>YouTube · @mindfulmonkeycoach</a></li></ul></div>
 <div class="mk-foot">${MED_SVG}<small>Breathe. Then play.</small></div>
 </div><div class="base"><span>© ${new Date().getFullYear()} MindfulMonkey Coaching · Panjim, Goa</span><span><a href="${p}refund-policy.html">Refund policy</a> · <a href="${p}privacy-policy.html">Privacy</a> · <a href="${p}terms.html">Terms</a></span></div></div></footer>
-<script src="${p}js/site.js"></script>
-<script src="${p}js/rig.js"></script>
-<script src="${p}js/monkeys.js"></script>
+<script src="${p}js/site.js?v=${V}"></script>
+<script src="${p}js/rig.js?v=${V}"></script>
+<script src="${p}js/monkeys.js?v=${V}"></script>
 </body>
 </html>`;
 }
