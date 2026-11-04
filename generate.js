@@ -256,7 +256,7 @@ ${sec("sec story bg-blush", `<div class="wrap">
 <p style="margin-top:22px;font-size:14px;color:var(--brown-mute)">Tap a bubble to see how it fits in.</p></div>
 <div class="orbit"><div class="ring" style="width:78%;height:76%"></div><div class="ring" style="width:100%;height:98%;opacity:.6"></div>
 <div class="me"><img src="${p}images/about-portrait.jpg" alt="Sudipta Mondal"></div>
-${BUBBLES.map(([t, x, y, d, cl, tip]) => `<span class="bub ${cl}" style="left:${x}%;top:${y}%;--d:${d}px" tabindex="0">${t}<span class="tip">${tip}</span></span>`).join("")}
+${BUBBLES.map(([t, x, y, d, cl, tip]) => `<span class="bub" style="left:${x}%;top:${y}%;--d:${d}px" tabindex="0">${t}<span class="tip">${tip}</span></span>`).join("")}
 </div></div></section>
 
 ${sec("sec bg-brown", `<div class="wrap">

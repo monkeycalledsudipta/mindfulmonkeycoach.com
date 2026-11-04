@@ -135,8 +135,9 @@
     for (var j = spots.length - 2; j >= 0; j--) if (spots[j].ty > spots[j + 1].ty - 120) spots[j].ty = spots[j + 1].ty - 120;
     trav = document.createElementNS("http://www.w3.org/2000/svg", "svg");
     trav.setAttribute("class", "mkr mk-trav"); trav.setAttribute("aria-hidden", "true");
-    trav.setAttribute("style", "position:absolute;left:0;top:0;width:1px;height:1px;overflow:visible;z-index:6;pointer-events:none;transition:none");
+    trav.setAttribute("style", "position:absolute;left:0;top:0;width:1px;height:1px;overflow:visible;z-index:6;pointer-events:none;transition:none;will-change:contents");
     document.body.appendChild(trav);
+    cacheSecs(); shown = null;
     window.addEventListener("scroll", onScroll, { passive: true }); onScroll();
   }
   function stopTravel() {
@@ -144,22 +145,38 @@
     if (trav) trav.remove(); trav = null;
     var f = document.querySelector(".mk-foot svg"); if (f) f.style.opacity = "";
   }
-  function onScroll() { if (!raf) raf = requestAnimationFrame(function () { raf = 0; frame(); }); }
+  // the monkey follows a smoothed scroll position, so wheel steps become one continuous glide
+  var shown = null;
+  function target() { return scrollY + innerHeight * 0.62; }
+  function tick() {
+    raf = 0;
+    var t = target();
+    if (shown === null || Math.abs(t - shown) > innerHeight * 3) shown = t;
+    shown += (t - shown) * 0.14;
+    if (Math.abs(t - shown) < 0.5) shown = t;
+    frame(shown);
+    if (shown !== t) raf = requestAnimationFrame(tick);
+  }
+  function onScroll() { if (!raf) raf = requestAnimationFrame(tick); }
   var ease = function (t) { return t < 0.5 ? 2 * t * t : 1 - Math.pow(-2 * t + 2, 2) / 2; };
+  var secCache = [];
+  function cacheSecs() { secCache = [].map.call(document.querySelectorAll("main > section, footer"), function (e) { var r = doc(e.getBoundingClientRect()); return { y0: r.y0, y1: r.y1, c: bg(e) }; }); }
   function bgAt(y) {
-    var secs = document.querySelectorAll("main > section, footer");
-    for (var i = 0; i < secs.length; i++) { var r = doc(secs[i].getBoundingClientRect()); if (y >= r.y0 && y < r.y1) return bg(secs[i]); }
+    for (var i = 0; i < secCache.length; i++) if (y >= secCache[i].y0 && y < secCache[i].y1) return secCache[i].c;
     return "#ffffff";
   }
+  var lastKey = "";
   function draw(pose, x, y, face, scale, alpha, fill) {
+    var key = JSON.stringify([pose, Math.round(x), Math.round(y), face, scale.toFixed(3), alpha.toFixed(2), fill]);
+    if (key === lastKey) return; lastKey = key;
     var d = R.draw(pose, { line: GOLD, fill: fill, lw: 1.5 });
     var low = Math.max.apply(null, d.feet.map(function (f) { return Math.max(f.ankle[1], f.toe[1]) + 3; }).concat(d.hands.map(function (h) { return h[1] + 4; })));
     trav.innerHTML = '<g transform="translate(' + x.toFixed(1) + " " + (y - low * scale).toFixed(1) + ") scale(" + (scale * face).toFixed(3) + " " + scale.toFixed(3) + ')">' + d.svg + "</g>";
     trav.style.opacity = (0.7 * alpha).toFixed(3);
   }
-  function frame() {
+  function frame(line) {
     if (!trav) return;
-    var line = scrollY + innerHeight * 0.62, n = spots.length;
+    var n = spots.length;
     var sc = function (s) { return s.scale || S; };
     var arrived = false;
     if (line < spots[0].ty - 420) { trav.style.opacity = "0"; }
