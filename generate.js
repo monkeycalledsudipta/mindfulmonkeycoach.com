@@ -33,18 +33,18 @@ const I = {
 const inr = (n) => `<span data-inr="${n}">₹${n.toLocaleString("en-IN")}</span>`;
 const WAVE_PATH = "M0 30 C240 0 480 60 720 30 S1200 0 1440 30 V60 H0Z";
 const wave = (fill) => `<svg class="wave" viewBox="0 0 1440 60" preserveAspectRatio="none" aria-hidden="true"><path d="${WAVE_PATH}" fill="${fill}"/></svg>`;
-const C = { white: "#FFFFFF", blush: "#FCF0ED", blue: "#0F4A9A", brown: "#3B2619" };
+const C = { white: "#FFFFFF", blush: "#FCEEF1", blue: "#0F4A9A", brown: "#14213D" };
 const sec = (cls, inner, w) => `<section class="${cls}${w ? " wave-top" : ""}">${w ? wave(C[w]) : ""}${inner}</section>`;
 const faq = (q, a) => `<details class="faq"><summary>${q}</summary><p>${a}</p></details>`;
 const logo = `<span class="badge"><svg viewBox="0 0 183 187.2" aria-hidden="true"><use href="#mk"/></svg></span>`;
 
 /* footer meditating monkey, drawn at build time from the rig */
-const med = RIG.draw(RIG.POSES.meditate, { line: "#D4A62A", fill: "#2E1D13", lw: 1.5 });
+const med = RIG.draw(RIG.POSES.meditate, { line: "#D4A62A", fill: "#101B33", lw: 1.5 });
 const MED_SVG = `<svg viewBox="${(med.bbox.x0 - 4).toFixed(1)} ${(med.bbox.y0 - 4).toFixed(1)} ${(med.bbox.x1 - med.bbox.x0 + 8).toFixed(1)} ${(med.bbox.y1 - med.bbox.y0 + 8).toFixed(1)}" aria-hidden="true">${med.svg}</svg>`;
 
 /* ---------- data ---------- */
 const COURSES = [
-  { key: "leap", name: "LEAP", href: "online-coaching/leap.html", tag: "1-on-1 · 4 months", img: "leap-back-lever.jpg", feat: true,
+  { key: "leap", name: "LEAP", href: "online-coaching/leap.html", tag: "1-on-1 · twice a week", img: "leap-back-lever.jpg", feat: true,
     d: "Make the leap into a more intentional life. Movement, nutrition, mindset and recovery, fully personal.",
     p: 160000, u: "one-time · instalments available" },
   { key: "playsophy", name: "Playsophy", href: "online-coaching/playsophy.html", tag: "Women only · 12 weeks", img: "playsophy-tree.jpg",
@@ -154,7 +154,7 @@ const ytStrip = (p, title, tiles, w) => sec("sec", `<div class="wrap">
 page("index.html", { title: "Mindful Monkey · Parkour and holistic coaching with Sudipta Mondal", desc: "Parkour, movement and holistic health coaching with Sudipta Mondal. LEAP, Playsophy, Goa group classes and Discovery calls, all booked on WhatsApp.", on: "Home", over: true }, (p) => `
 <section class="hero"><img src="${p}images/hero-storm-jump.jpg" alt="Sudipta mid-jump on a stormy Goa beach">
 <div class="wrap"><p class="eyebrow">Parkour · Movement · Holistic health</p>
-<h1>Strong body.<br>Strong mind.<br><em>Wild spirit.</em></h1>
+<h1>Strong body.<br>Strong mind.<br><em>Strong spirit.</em></h1>
 <p class="lede">Coaching that meets you where you are, online anywhere in the world or outdoors in Goa.</p>
 <div class="row-btns"><a class="btn btn-white" href="${wa("Hi Sudipta, I am interested in your coaching")}" ${ext}>${I.wa} Start on WhatsApp</a><a class="btn btn-line" href="courses.html">Explore courses</a></div></div>
 </section>
@@ -284,7 +284,7 @@ ${ytStrip(p, "Watch my <em>journey.</em>", [["about-na-portrait.jpg", "On screen
 
 /* =================== COURSES =================== */
 const DETAIL = {
-  leap: { long: "Four months, fully personal. Movement, nutrition, mindset and recovery come together in a practice built around your life, without crash diets, supplements or a one-size-fits-all plan.", pts: ["32 hours of live coaching", "Customised daily movement routines", "Progressive nutrition and habit support", "Rest practices and meditation"] },
+  leap: { long: "Four months, fully personal. Movement, nutrition, mindset and recovery come together in a practice built around your life, without crash diets, supplements or a one-size-fits-all plan.", pts: ["Live 1-on-1 sessions twice a week", "Customised daily movement routines", "Progressive nutrition and habit support", "Rest practices and meditation"] },
   playsophy: { long: "A joyful, chakra-rooted movement experience for women aged 25 to 50 with prior movement experience. Explore play, strength, rhythm and recovery through the seven chakras.", pts: ["24 live Zoom sessions in 12 weeks", "Recordings for 6 months", "Food, seasons, music and voice", "Weekly group Q&A"] },
   group: { long: "Outdoor parkour and movement classes in Panjim, three mornings a week. Rotating outdoor locations, shared ahead of each class.", pts: ["Mon · Wed · Fri mornings", "6:45 to 7:45/8:00 AM", "Drop-in or monthly packs", "Rain or shine, always outdoors"] },
   discovery: { long: "One hour with Sudipta on video. Get to know her method before committing to LEAP, or get focused help as a current or past client.", pts: ["60-minute 1-on-1 video call", "Discovery ₹2,500 · Consultation ₹5,000", "Paid before your slot", "A clear next step"] },
@@ -330,7 +330,7 @@ coursePage("online-coaching/leap.html", {
   name: "LEAP", desc: "LEAP: a 4-month, fully personal 1-on-1 transformation with Sudipta Mondal. Movement, nutrition, mindset and recovery.",
   eyebrow: "Course 01 · 4-month personal transformation", lead: "For the person ready to change more than a routine.",
   intro: "LEAP brings movement, nutrition, mindset and recovery together in a deeply personalised practice, without crash diets, supplements or a one-size-fits-all plan.",
-  meta: [["Investment", inr(160000)], ["Duration", "4 months"], ["Format", "1-on-1"]],
+  meta: [["Investment", inr(160000)], ["Duration", "4 months"], ["Sessions", "Twice a week"]],
   img: "leap-back-lever.jpg", imgAlt: "Sudipta holding a back lever on beach bars", brochure: BROCHURE.leap,
   sections: (p) => `
 ${sec("sec bg-blush", `<div class="wrap">
@@ -339,11 +339,11 @@ ${sec("sec bg-blush", `<div class="wrap">
 <div class="rv"><span>02</span><h3>Nourish</h3><p>Progressive nutrition and habit support. No dieting, no supplements.</p></div>
 <div class="rv"><span>03</span><h3>Activate</h3><p>Growth mindset, self-talk and brain-flexibility tools.</p></div>
 <div class="rv"><span>04</span><h3>Plug in to plug out</h3><p>Rest practices, recovery, sleep hygiene and meditation.</p></div></div>
-<ul class="dots" style="margin-top:44px;max-width:900px"><li>32 hours of live coaching</li><li>Customised daily movement routines</li><li>Online, or in person</li><li>Limited places</li></ul>
+<ul class="dots" style="margin-top:44px;max-width:900px"><li>Live 1-on-1 sessions twice a week</li><li>Customised daily movement routines</li><li>Online, or in person</li><li>Limited places</li></ul>
 </div>`, "blush")}
 <section class="sec fit"><div class="wrap">
 <div class="rv"><p class="eyebrow">Is it for you?</p><h2 class="h2" style="font-size:clamp(38px,4.4vw,58px);margin-top:18px">LEAP is for you <em>if…</em></h2>
-<ul class="big"><li>You have no fitness routine yet. LEAP starts from where you are today.</li><li>You don't want to become an athlete. You want to move, feel and function better.</li><li>You can give it 16 weeks: about 2+ hours of live coaching a week, plus daily practice.</li></ul></div>
+<ul class="big"><li>You have no fitness routine yet. LEAP starts from where you are today.</li><li>You don't want to become an athlete. You want to move, feel and function better.</li><li>You can commit to 4 months of live sessions twice a week, plus daily practice.</li></ul></div>
 <a class="vid rv" href="https://www.instagram.com/reels/DRMgsxzCBZq/" ${ext} style="aspect-ratio:auto;height:460px;border-radius:22px"><img src="${p}images/leap-tree-smile.jpg" alt="">${I.play}<div class="cap"><small>Instagram</small>Lavinder's LEAP story</div></a>
 </div></section>
 ${priceSection({ name: "LEAP", ph: `${inr(160000)} <em>one-time.</em>`, pn: "Instalments are available and places are limited. Message Sudipta to check the next start date.",
@@ -360,7 +360,7 @@ ${faq("What if I miss or need to reschedule a class?", "Give at least 12 hours' 
 ${faq("What equipment do I need?", "Very little. Sudipta will tell you exactly what you need for your setup during onboarding.")}
 ${faq("Is there a refund policy?", "Fees are non-refundable once a programme begins.")}
 ${faq("What if I have a current or past injury?", "Tell Sudipta upfront. The programme is adapted around your injury history.")}
-${faq("What commitment are you asking for?", "16 weeks, roughly 2+ hours of live coaching a week, plus daily movement and nutrition practice.")}
+${faq("What commitment are you asking for?", "Four months of live 1-on-1 sessions twice a week, plus daily movement and nutrition practice.")}
 </div></section>`,
 });
 
@@ -415,13 +415,13 @@ ${sec("sec bg-blush", `<div class="wrap">
 <div class="rv"><span>Where</span><h3>Panjim, Goa</h3><p>Rotating outdoor locations, shared ahead of each class.</p></div>
 <div class="rv"><span>Updates</span><h3>@goaparkour</h3><p>Follow on <a href="${IG_GOA}" ${ext} style="color:var(--blue);border-bottom:1px solid">Instagram</a> for locations and news.</p></div></div>
 </div>`, "blush")}
-${sec("sec bg-brown", `<div class="wrap pbox">
+${sec("sec bg-blue", `<div class="wrap pbox">
 <div class="rv"><p class="eyebrow">Packages</p><h2 class="h2" style="margin:18px 0 22px">Drop in, or <em>commit.</em></h2>
 <p style="color:rgba(255,255,255,.82);max-width:440px">Billing is for the full month. Joining mid-month? A lower package or the drop-in rate applies for that month.</p>
 <div style="margin-top:28px"><a class="btn btn-white" href="${waCourse("Group Classes")}" ${ext}>${I.wa} I'm interested in Group Classes</a></div></div>
 <table class="ptable rv"><tr><th>Package</th><th>Fee</th></tr>
 ${[["Drop-in", 850], ["6 sessions", 4200], ["8 sessions", 4800], ["10 sessions", 6000], ["12 sessions", 7000]].map(([k, v]) => `<tr><td>${k}</td><td><b>${inr(v)}</b></td></tr>`).join("")}</table>
-</div>`, "brown")}`,
+</div>`, "blue")}`,
 });
 
 /* DISCOVERY */
@@ -454,8 +454,8 @@ page("online-coaching/compare.html", { title: "LEAP vs Playsophy · Mindful Monk
 <section style="padding-bottom:110px"><div class="wrap" style="overflow-x:auto">
 <table class="ptable"><tr><th></th><th>LEAP</th><th>Playsophy (women only)</th></tr>
 <tr><td>Format</td><td>1-on-1, fully personal</td><td>Small group, up to 10</td></tr>
-<tr><td>Duration</td><td>4 months (16 weeks)</td><td>12 weeks</td></tr>
-<tr><td>Live sessions</td><td>32 hours of live coaching, timed around you</td><td>24 Zoom sessions, Tue &amp; Thu, 6:30 to 7:30 AM IST</td></tr>
+<tr><td>Duration</td><td>4 months</td><td>12 weeks</td></tr>
+<tr><td>Live sessions</td><td>Live 1-on-1 sessions twice a week, timed around you</td><td>24 Zoom sessions, Tue &amp; Thu, 6:30 to 7:30 AM IST</td></tr>
 <tr><td>Framework</td><td>Learn, Nourish, Activate, Plug in to plug out</td><td>The seven chakras: movement, food, rest, dance and music</td></tr>
 <tr><td>Who it's for</td><td>Beginners to advanced</td><td>Women 25 to 50 with prior movement experience</td></tr>
 <tr><td>Price</td><td><b>${inr(160000)}</b><br>one-time, instalments available</td><td><b>${inr(21600)}</b> early bird<br>${inr(24000)} regular</td></tr>
