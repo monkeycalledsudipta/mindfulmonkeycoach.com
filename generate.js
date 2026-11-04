@@ -31,8 +31,13 @@ const I = {
 
 /* ---------- helpers ---------- */
 const inr = (n) => `<span data-inr="${n}">₹${n.toLocaleString("en-IN")}</span>`;
-const WAVE_PATH = "M0 30 C240 0 480 60 720 30 S1200 0 1440 30 V60 H0Z";
-const wave = (fill) => `<svg class="wave" viewBox="0 0 1440 60" preserveAspectRatio="none" aria-hidden="true"><path d="${WAVE_PATH}" fill="${fill}"/></svg>`;
+// first-design waves: tall asymmetric curve + a thin accent line; alternate direction per use
+let waveN = 0;
+const wave = (fill) => {
+  const flip = waveN++ % 2 ? ' style="transform:scaleX(-1)"' : "";
+  const line = fill === "#FFFFFF" || fill === "#FCEEF1" ? "#9CC2FF" : "#F4C9D2";
+  return `<svg class="wave" viewBox="0 0 1440 150" preserveAspectRatio="none" aria-hidden="true"${flip}><path d="M0 95 C 240 30 420 30 720 85 S 1180 140 1440 60 L1440 150 L0 150Z" fill="${fill}"/><path d="M0 70 C 260 10 440 10 720 62 S 1180 120 1440 35" fill="none" stroke="${line}" stroke-width="2" opacity=".7" vector-effect="non-scaling-stroke"/></svg>`;
+};
 const C = { white: "#FFFFFF", blush: "#FCEEF1", blue: "#0F4A9A", brown: "#14213D" };
 const sec = (cls, inner, w) => `<section class="${cls}${w ? " wave-top" : ""}">${w ? wave(C[w]) : ""}${inner}</section>`;
 const faq = (q, a) => `<details class="faq"><summary>${q}</summary><p>${a}</p></details>`;

@@ -34,7 +34,9 @@ section{position:relative}
 .center{text-align:center}
 
 /* wavy top edge: the section draws a wave in its own colour above itself */
-.wave-top>.wave{position:absolute;left:0;top:-58px;width:100%;height:60px;display:block;pointer-events:none;z-index:2}
+.wave-top>.wave{position:absolute;left:0;top:-119px;width:100%;height:120px;display:block;pointer-events:none;z-index:2}
+main>section:has(+ .wave-top){padding-bottom:170px}
+@media (max-width:980px){.wave-top>.wave{top:-59px;height:60px}main>section:has(+ .wave-top){padding-bottom:110px}}
 
 /* buttons */
 .btn{display:inline-flex;align-items:center;justify-content:center;gap:10px;padding:15px 26px;border-radius:999px;font:500 13.5px/1 "DM Mono",monospace;letter-spacing:.06em;text-transform:uppercase;border:0;cursor:pointer;white-space:nowrap;transition:transform .2s,box-shadow .2s,background .2s}
@@ -310,11 +312,11 @@ footer .soc svg{width:19px;height:19px}
 footer .base{display:flex;justify-content:space-between;gap:20px;flex-wrap:wrap;margin-top:56px;padding-top:24px;border-top:1px solid rgba(255,255,255,.12);font-size:13px;color:#9CA7BE;position:relative}
 footer .base a:hover{color:#fff}
 .mk-foot{display:flex;flex-direction:column;align-items:center;justify-content:flex-end}
-.mk-foot svg{width:200px;height:auto;overflow:visible}
+.mk-foot svg{width:200px;height:auto;overflow:visible;opacity:.7}
 .mk-foot small{font:500 10.5px "DM Mono";letter-spacing:.14em;text-transform:uppercase;color:var(--gold-soft);margin-top:6px;opacity:.85}
 
 /* storyline monkeys (placed by js/monkeys.js) */
-.mkr{transition:opacity .9s ease,transform .9s cubic-bezier(.2,1.4,.4,1)}
+.mkr{opacity:.7;transition:opacity .9s ease,transform .9s cubic-bezier(.2,1.4,.4,1)}
 .mkr.pre{opacity:0!important;transform:translateY(-46px)}
 
 /* reveal */
