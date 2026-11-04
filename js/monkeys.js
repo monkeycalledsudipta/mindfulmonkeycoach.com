@@ -46,10 +46,10 @@
     s.setAttribute("class", "mkr pre"); s.setAttribute("aria-hidden", "true");
     s.setAttribute("style", "position:absolute;left:0;top:0;width:1px;height:1px;overflow:visible;z-index:6;pointer-events:none");
     s.innerHTML = '<g transform="translate(' + x + " " + g.oy + ") scale(" + S * face + " " + S + ')">' + d.svg + "</g>";
-    document.body.appendChild(s); placed.push({ s: s, sec: sec });
+    document.body.appendChild(s); placed.push({ s: s, sec: sec, spot: { pose: pose, x: x, y: y, face: face, fill: bg(sec) } });
     return g.box;
   }
-  function clear() { placed.forEach(function (p) { p.s.remove(); }); placed = []; }
+  function clear() { placed.forEach(function (p) { p.s.remove(); }); placed = []; stopTravel(); }
   // the monkey may touch its surface, so the overlap test ignores its bottom padding
   function clearOf(box, B) { var t = { x0: box.x0, x1: box.x1, y0: box.y0, y1: box.y1 - PAD - 1 }; return !B.some(function (b) { return hit(t, b); }); }
 
@@ -98,6 +98,7 @@
         side ^= 1; break;
       }
     });
+    if (ANIM) { placed.forEach(function (p) { p.s.style.display = "none"; }); startTravel(); return; }
     if ("IntersectionObserver" in window) {
       var io = new IntersectionObserver(function (es) {
         es.forEach(function (e) {
@@ -108,6 +109,93 @@
       }, { threshold: 0.2 });
       placed.forEach(function (p) { io.observe(p.sec); });
     } else placed.forEach(function (p) { p.s.classList.remove("pre"); });
+  }
+
+  /* ---------- scroll animation ----------
+     One monkey travels down the page as you scroll. It holds a quirky pose at each spot, then hops to the
+     next: an arc within the same side margin, or (when the next spot is on the other side or on a box)
+     a quick hop out and back in, so it never sweeps across text. It lands meditating in the footer. */
+  var ANIM = !(window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches) && !/[?&]static\b/.test(location.search);
+  var trav = null, spots = [], foot = null, raf = 0;
+  function footSpot() {
+    var svg = document.querySelector(".mk-foot svg"); if (!svg) return null;
+    var vb = svg.viewBox.baseVal, q = doc(svg.getBoundingClientRect()), k = (q.x1 - q.x0) / vb.width;
+    var d = R.draw(P.meditate, { lw: 1.5 });
+    var low = Math.max.apply(null, d.feet.map(function (f) { return Math.max(f.ankle[1], f.toe[1]) + 3; }).concat(d.hands.map(function (h) { return h[1] + 4; })));
+    return { pose: "meditate", x: q.x0 + (0 - vb.x) * k, y: q.y0 + (low - vb.y) * k, face: 1, scale: k, fill: "#101B33", el: svg };
+  }
+  function startTravel() {
+    spots = placed.map(function (p) { return p.spot; }).sort(function (a, b) { return a.y - b.y; });
+    foot = footSpot();
+    if (!spots.length && !foot) return;
+    if (foot) { foot.el.style.transition = "opacity .35s"; foot.el.style.opacity = "0"; spots.push(foot); }
+    // timing key: where the scroll line must be for the monkey to be at a spot (the footer must be reachable)
+    var maxLine = document.documentElement.scrollHeight - innerHeight * 0.38 - 4;
+    spots.forEach(function (sp) { sp.ty = Math.min(sp.y, maxLine); });
+    for (var j = spots.length - 2; j >= 0; j--) if (spots[j].ty > spots[j + 1].ty - 120) spots[j].ty = spots[j + 1].ty - 120;
+    trav = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+    trav.setAttribute("class", "mkr mk-trav"); trav.setAttribute("aria-hidden", "true");
+    trav.setAttribute("style", "position:absolute;left:0;top:0;width:1px;height:1px;overflow:visible;z-index:6;pointer-events:none;transition:none");
+    document.body.appendChild(trav);
+    window.addEventListener("scroll", onScroll, { passive: true }); onScroll();
+  }
+  function stopTravel() {
+    window.removeEventListener("scroll", onScroll);
+    if (trav) trav.remove(); trav = null;
+    var f = document.querySelector(".mk-foot svg"); if (f) f.style.opacity = "";
+  }
+  function onScroll() { if (!raf) raf = requestAnimationFrame(function () { raf = 0; frame(); }); }
+  var ease = function (t) { return t < 0.5 ? 2 * t * t : 1 - Math.pow(-2 * t + 2, 2) / 2; };
+  function bgAt(y) {
+    var secs = document.querySelectorAll("main > section, footer");
+    for (var i = 0; i < secs.length; i++) { var r = doc(secs[i].getBoundingClientRect()); if (y >= r.y0 && y < r.y1) return bg(secs[i]); }
+    return "#ffffff";
+  }
+  function draw(pose, x, y, face, scale, alpha, fill) {
+    var d = R.draw(pose, { line: GOLD, fill: fill, lw: 1.5 });
+    var low = Math.max.apply(null, d.feet.map(function (f) { return Math.max(f.ankle[1], f.toe[1]) + 3; }).concat(d.hands.map(function (h) { return h[1] + 4; })));
+    trav.innerHTML = '<g transform="translate(' + x.toFixed(1) + " " + (y - low * scale).toFixed(1) + ") scale(" + (scale * face).toFixed(3) + " " + scale.toFixed(3) + ')">' + d.svg + "</g>";
+    trav.style.opacity = (0.7 * alpha).toFixed(3);
+  }
+  function frame() {
+    if (!trav) return;
+    var line = scrollY + innerHeight * 0.62, n = spots.length;
+    var sc = function (s) { return s.scale || S; };
+    var arrived = false;
+    if (line < spots[0].ty - 420) { trav.style.opacity = "0"; }
+    else if (line < spots[0].ty) {
+      // the opening leap: drops in from above into the first pose
+      var t = ease((line - (spots[0].ty - 420)) / 420), a = spots[0];
+      var pose = t < 0.7 ? P.leap : R.blend(P.leap, P[a.pose], (t - 0.7) / 0.3);
+      draw(pose, a.x, a.y - (1 - t) * 260, a.face, S, Math.min(1, t * 2), a.fill);
+    } else {
+      var i = 0; while (i < n - 1 && line >= spots[i + 1].ty) i++;
+      var A = spots[i];
+      if (i === n - 1) { arrived = true; if (A === foot) trav.style.opacity = "0"; else draw(P[A.pose], A.x, A.y, A.face, sc(A), 1, A.fill); }
+      else {
+        var B = spots[i + 1], u = (line - A.ty) / (B.ty - A.ty);
+        if (u < 0.45) draw(P[A.pose], A.x, A.y, A.face, sc(A), 1, A.fill);       // pause in this section's pose
+        else {
+          var t2 = ease((u - 0.45) / 0.55);
+          var sameSide = Math.abs(B.x - A.x) < 160 && B !== foot;
+          var mid = t2 < 0.5 ? R.blend(P[A.pose], P.leap, t2 * 2) : R.blend(P.leap, P[B.pose], (t2 - 0.5) * 2);
+          var s = sc(A) + (sc(B) - sc(A)) * t2;
+          if (sameSide) {
+            // arc down the margin, bowing outwards toward the page edge
+            var out = (A.x > innerWidth / 2 ? 1 : -1) * 40 * Math.sin(Math.PI * t2);
+            var x = A.x + (B.x - A.x) * t2 + out, y = A.y + (B.y - A.y) * t2 - 140 * Math.sin(Math.PI * t2);
+            draw(mid, x, y, t2 < 0.5 ? A.face : B.face, s, 1, bgAt(y - 40));
+          } else if (t2 < 0.5) {
+            // hop up out of the current spot and fade
+            var k = t2 * 2; draw(mid, A.x, A.y - 160 * k, A.face, sc(A), 1 - k, A.fill);
+          } else {
+            // drop into the next spot and fade in
+            var k2 = (t2 - 0.5) * 2; draw(mid, B.x, B.y - 160 * (1 - k2), B.face, sc(B), k2, B === foot ? foot.fill : B.fill);
+          }
+        }
+      }
+    }
+    if (foot) foot.el.style.opacity = arrived ? "" : "0";
   }
   window.placeMonkeys = place;
   var tm; window.addEventListener("resize", function () { clearTimeout(tm); tm = setTimeout(place, 300); });
