@@ -167,7 +167,10 @@ function footer(p, tail = "") {
 }
 function page(file, { title, desc, on, over = false, tail = "", waText = "Hi Sudipta, I would like to know more about your coaching" }, body) {
   const depth = file.split("/").length - 1, p = depth ? "../".repeat(depth) : "";
-  const html = head(title, desc, p) + header(p, on, over, waText) + "\n<main>\n" + body(p) + footer(p, tail);
+  let html = head(title, desc, p) + header(p, on, over, waText) + "\n<main>\n" + body(p) + footer(p, tail);
+  // phones: images below the first screen load only when scrolled near (hero and page-top photos stay eager)
+  html = html.replace(/<img (?![^>]*loading=)(?![^>]*(?:hero-|class="a"))/g, '<img loading="lazy" decoding="async" ');
+  html = html.replace(/(<div class="im"><img )loading="lazy" decoding="async" /, "$1");
   const fp = path.join(OUT, file);
   fs.mkdirSync(path.dirname(fp), { recursive: true });
   fs.writeFileSync(fp, html);
@@ -402,7 +405,7 @@ ${priceSection({ name: "LEAP", ph: `${inr(160000)} <em>one-time.</em>`, pn: "Ins
   extra: `<a class="text-link" href="../discovery.html" style="color:#fff">Still deciding? Book a Discovery Call →</a><a class="text-link" href="compare.html" style="color:#fff">Compare LEAP and Playsophy →</a>` }, "")}
 <section class="sec"><div class="wrap">
 <p class="eyebrow" style="margin-bottom:16px">From LEAP clients</p><h2 class="h2" style="margin-bottom:40px">In their <em>words.</em></h2>
-<div class="tgrid" style="grid-template-columns:1fr 1fr">${TESTI.slice(0, 2).map((t) => tcard({ ...t, q: t.full })).join("")}</div>
+<div class="tgrid g2">${TESTI.slice(0, 2).map((t) => tcard({ ...t, q: t.full })).join("")}</div>
 </div></section>
 <section class="sec bg-blush"><div class="wrap narrow">
 <p class="eyebrow" style="margin-bottom:16px">Questions</p><h2 class="h2" style="margin-bottom:36px">Good to <em>know.</em></h2>
@@ -463,7 +466,7 @@ coursePage("group-classes.html", {
   sections: (p) => `
 ${sec("sec bg-blush", `<div class="wrap">
 <p class="eyebrow">How it works</p><h2 class="h2" style="margin:18px 0 50px">Show up. <em>Play outside.</em></h2>
-<div class="igrid" style="grid-template-columns:repeat(3,1fr)"><div class="rv"><span>When</span><h3>Mon · Wed · Fri</h3><p>6:45 to 7:45/8:00 AM.</p></div>
+<div class="igrid g3"><div class="rv"><span>When</span><h3>Mon · Wed · Fri</h3><p>6:45 to 7:45/8:00 AM.</p></div>
 <div class="rv"><span>Where</span><h3>Panjim, Goa</h3><p>Rotating outdoor locations, shared ahead of each class.</p></div>
 <div class="rv"><span>Updates</span><h3>@goaparkour</h3><p>Follow on <a href="${IG_GOA}" ${ext} style="color:var(--blue);border-bottom:1px solid">Instagram</a> for locations and news.</p></div></div>
 </div>`, "blush")}
@@ -520,10 +523,10 @@ page("online-coaching/compare.html", { title: "LEAP vs Playsophy · Mindful Monk
 /* =================== TESTIMONIALS =================== */
 page("testimonials.html", { title: "Testimonials · Mindful Monkey", desc: "Real stories from LEAP, Playsophy and group-class students of Sudipta Mondal.", on: "Testimonials" }, (p) => `
 <section class="phero" style="padding-bottom:70px"><div class="wrap"><p class="eyebrow">Real people, real change</p><h1>In their <em>words.</em></h1></div></section>
-${sec("sec bg-blush", `<div class="wrap"><div class="tgrid" style="grid-template-columns:1fr 1fr">${TESTI.map((t) => tcard({ ...t, q: t.full || t.q })).join("")}</div></div>`, "blush")}
+${sec("sec bg-blush", `<div class="wrap"><div class="tgrid g2">${TESTI.map((t) => tcard({ ...t, q: t.full || t.q })).join("")}</div></div>`, "blush")}
 <section class="sec"><div class="wrap">
 <p class="eyebrow" style="margin-bottom:16px">On video</p><h2 class="h2" style="margin-bottom:40px;font-size:clamp(38px,4.4vw,56px)">Hear it <em>from them.</em></h2>
-<div class="yt-grid" style="grid-template-columns:1fr 1fr">${[[V_.arata, "Arata · 63 · Washington D.C.", "Healed hernia and knee pain, no surgery"], [V_.usha, "Usha · 43 · Pune", "Training with Sudipta"]].map(([v, k, c]) => `<a class="vid rv" ${ytA(v)}><img src="${ytThumb(v)}" alt="" loading="lazy">${I.play}<div class="cap"><small>${k}</small>${c}</div></a>`).join("")}</div>
+<div class="yt-grid g2">${[[V_.arata, "Arata · 63 · Washington D.C.", "Healed hernia and knee pain, no surgery"], [V_.usha, "Usha · 43 · Pune", "Training with Sudipta"]].map(([v, k, c]) => `<a class="vid rv" ${ytA(v)}><img src="${ytThumb(v)}" alt="" loading="lazy">${I.play}<div class="cap"><small>${k}</small>${c}</div></a>`).join("")}</div>
 </div></section>
 <section class="sec"><div class="wrap two" style="align-items:start">
 <div class="rv"><p class="eyebrow" style="margin-bottom:18px">More transformations</p><h2 class="h2" style="font-size:clamp(36px,4vw,52px)">Small shifts, <em>big change.</em></h2></div>
