@@ -18,6 +18,27 @@ const BROCHURE = {
   leap: "https://drive.google.com/file/d/1jgNdTohze5hF_YPNC79KZZsPAYCUX4jS/view?usp=sharing",
   playsophy: "https://drive.google.com/file/d/1jJvOm31Bg5TxNpa6EKKLjHd-hn4rTFdc/view?usp=sharing",
 };
+const PHONE = "+91 97110 13282";
+const EMAIL = "mindfulmonkeycoach@gmail.com";
+
+/* Sudipta's videos (from "Links for Website.docx"). short = YouTube Short (vertical), t = start second */
+const V_ = {
+  hero: { id: "ikum498DmQI", title: "Back to your roots" },
+  fitness: { id: "Si7zwOeqJ_s", title: "To be motivated, you must be disciplined" },
+  started: { id: "dNDzgkRulg4", title: "There is fire within me" },
+  workout: { id: "d_9e7xTF6Dw", title: "The MOP workout" },
+  arata: { id: "1WcoGN8Rtnc", t: 57, title: "Arata: healed hernia and knee pain with LEAP" },
+  usha: { id: "BPhBPiDXTmo", short: true, title: "Usha trains with Sudipta" },
+  goaParkour: { id: "VAX77Tc569U", title: "Parkour in Goa" },
+  panjim: { id: "lVTysSQiOeI", title: "Exploring Panjim" },
+  batch: { id: "LF9HbpPiQ4o", short: true, title: "The regular parkour batch" },
+  podcast: { id: "4cw0-5gRD2w", t: 2974, title: "A raw conversation on devotion, Maya and inner awakening" },
+};
+const SPOTIFY = "https://open.spotify.com/episode/54Nv5suDxa9mOo6LTFc88x";
+const ytUrl = (v) => v.short ? `https://www.youtube.com/shorts/${v.id}` : `https://www.youtube.com/watch?v=${v.id}${v.t ? `&t=${v.t}s` : ""}`;
+const ytThumb = (v) => `https://i.ytimg.com/vi/${v.id}/maxresdefault.jpg`;
+// a link that opens the video in an on-page player (js/site.js); falls back to YouTube
+const ytA = (v) => `href="${ytUrl(v)}" target="_blank" rel="noopener" data-yt="${v.id}"${v.t ? ` data-t="${v.t}"` : ""}${v.short ? " data-short" : ""}`;
 const SYM = fs.readFileSync(path.join(__dirname, "site-src/monkey_sym.txt"), "utf8").trim();
 const ext = `target="_blank" rel="noopener"`;
 
@@ -72,11 +93,11 @@ const TESTI = [
     full: "I did Sudipta's four-month LEAP program with her in person in Bombay. Over those four months, I lost weight, felt less stressed and saw my cholesterol levels become more balanced. We worked on movement, mindful eating, sleep and rest. She also introduced me to another client, Lavinder. Training together showed me how good it feels to connect with someone through shared, healthy choices." },
   { q: "The Discovery & Consultation session convinced me to sign up for LEAP, and I've now been with the program for over 3 years.", who: "Sarah Jane Dias", meta: "Former Femina Miss India World", c: "Discovery",
     full: "As an actress, TV host, model and former Femina Miss India World titleholder, I came to Sudipta looking for a program that could improve my endurance, intensity, energy and flexibility, along with real nutritional guidance and an honest look at habits I didn't even realize were holding me back, things like sleep quality and supplement use. The Discovery & Consultation session convinced me to sign up for LEAP, and I've now been with the program for over 3 years. Sudipta has been a constant presence throughout, mapping out the roadmap, setting goals, and providing the nudging I need to actually hit them." },
-  { q: "She helped me develop a relationship with my body that I never had before. The whole experience has made me feel fitter, livelier, healthier and more active.", who: "Arata", meta: "63 · Washington D.C.", c: "4-month programme" },
-  { q: "It was a body, mind and life transformation experience. This mindful coaching not only changes your perspective towards your body, it also upgrades your beliefs about movement and holistic health.", who: "Usha", meta: "43 · Pune", c: "Personal coaching",
+  { q: "She helped me develop a relationship with my body that I never had before. The whole experience has made me feel fitter, livelier, healthier and more active.", who: "Arata", meta: "63 · Washington D.C.", c: "4-month programme", v: V_.arata },
+  { q: "It was a body, mind and life transformation experience. This mindful coaching not only changes your perspective towards your body, it also upgrades your beliefs about movement and holistic health.", who: "Usha", meta: "43 · Pune", c: "Personal coaching", v: V_.usha,
     full: "My experience of personal coaching with Sudipta: it was body, mind and life transformation experience. This mindful coaching not only changes your perspective towards your body it also upgrades your beliefs about movement and holistic health. It's highly recommended for females because no one can understand the female body and mind needs more than a female coach." },
 ];
-const tcard = (t) => `<div class="t${t.hl ? " hl" : ""} rv"><q>“${t.q}”</q><div class="who"><div><b>${t.who}</b>${t.meta}</div><span class="c">${t.c}</span></div></div>`;
+const tcard = (t) => `<div class="t${t.hl ? " hl" : ""} rv"><q>“${t.q}”</q>${t.v ? `<a class="tw" ${ytA(t.v)}>${I.yt} Watch ${t.who}'s story</a>` : ""}<div class="who"><div><b>${t.who}</b>${t.meta}</div><span class="c">${t.c}</span></div></div>`;
 
 /* ---------- layout ---------- */
 function head(title, desc, p) {
@@ -116,15 +137,17 @@ ${L("testimonials.html", "Testimonials")}${L("contact.html", "Contact")}
 }
 function footer(p) {
   return `<section class="workout"><div class="wrap" style="max-width:1360px">
-<a class="banner" href="${YT}" ${ext}><img src="${p}images/about-plank.jpg" alt="Sudipta holding a plank on paralettes"><div class="inner">
+<a class="banner" ${ytA(V_.workout)}><img src="${p}images/about-plank.jpg" alt="Sudipta holding a plank on paralettes"><div class="inner">
 <p class="eyebrow" style="margin-bottom:16px">Free on YouTube</p>
 <h2>Sudipta's <em>Home Work Out</em></h2>
 <p>No gym, no equipment. Move with Sudipta from your living-room floor.</p>
-<span class="btn btn-white">${I.yt} Watch on YouTube</span></div>${I.play}</a>
+<span class="btn btn-white">${I.yt} Watch the workout</span></div>${I.play}</a>
 </div></section>
 </main>
 <footer class="site-footer"><div class="wrap" style="max-width:1360px"><div class="fcols">
 <div><a class="brand" href="${p}index.html">${logo} mindful monkey</a><p style="font-size:15px;max-width:300px">Movement, play and mindful living with Sudipta Mondal. Online worldwide, outdoors in Goa.</p>
+<ul class="fcontact"><li><a href="tel:${PHONE.replace(/\s/g, "")}"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M5 3h3.5l1.8 4.6-2.3 1.5a11 11 0 0 0 6 6l1.5-2.3L20 14.5V18a2 2 0 0 1-2 2A16 16 0 0 1 3 5a2 2 0 0 1 2-2Z"/></svg>${PHONE}</a></li>
+<li><a href="mailto:${EMAIL}"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="m3.5 6.5 8.5 7 8.5-7"/></svg>${EMAIL}</a></li></ul>
 <div class="soc"><a href="${IG}" ${ext} aria-label="Instagram">${I.ig}</a><a href="${YT}" ${ext} aria-label="YouTube">${I.yt}</a><a href="${FB}" ${ext} aria-label="Facebook">${I.fb}</a><a href="${wa("Hi Sudipta")}" ${ext} aria-label="WhatsApp">${I.wa}</a></div></div>
 <div><h4>Courses</h4><ul><li><a href="${p}online-coaching/leap.html">LEAP</a></li><li><a href="${p}online-coaching/playsophy.html">Playsophy</a></li><li><a href="${p}group-classes.html">Group Classes</a></li><li><a href="${p}discovery.html">Discovery Call</a></li></ul></div>
 <div><h4>Explore</h4><ul><li><a href="${p}about.html">About Sudipta</a></li><li><a href="${p}testimonials.html">Testimonials</a></li><li><a href="${YT}" ${ext}>YouTube</a></li><li><a href="${p}contact.html">Contact</a></li></ul></div>
@@ -153,14 +176,17 @@ const card = (c, p) => `<div class="card${c.feat ? " feat" : ""} rv"><a class="p
 const ytStrip = (p, title, tiles, w) => sec("sec", `<div class="wrap">
 <div class="head-row" style="margin-bottom:38px"><div><p class="eyebrow" style="margin-bottom:14px">On YouTube · @mindfulmonkeycoach</p><h2 class="h2" style="font-size:clamp(38px,4.4vw,56px)">${title}</h2></div>
 <a class="text-link yt-sub" href="${YT}" ${ext}>${I.yt} Subscribe on YouTube</a></div>
-<div class="yt-grid">${tiles.map(([img, k, c]) => `<a class="vid rv" href="${YT}" ${ext}><img src="${p}images/${img}" alt="">${I.play}<div class="cap"><small>${k}</small>${c}</div></a>`).join("")}</div>
+<div class="yt-grid">${tiles.map(([src, k, c]) => typeof src === "object"
+    ? `<a class="vid rv" ${ytA(src)}><img src="${ytThumb(src)}" alt="" loading="lazy">${I.play}<div class="cap"><small>${k}</small>${c}</div></a>`
+    : `<a class="vid rv" href="${YT}" ${ext}><img src="${p}images/${src}" alt="">${I.play}<div class="cap"><small>${k}</small>${c}</div></a>`).join("")}</div>
 </div>`, w);
 
 /* =================== HOME =================== */
 page("index.html", { title: "Mindful Monkey · Parkour and holistic coaching with Sudipta Mondal", desc: "Parkour, movement and holistic health coaching with Sudipta Mondal. LEAP, Playsophy, Goa group classes and Discovery calls, all booked on WhatsApp.", on: "Home", over: true }, (p) => `
 <section class="hero"><img src="${p}images/hero-storm-jump.jpg" alt="Sudipta mid-jump on a stormy Goa beach">
-<div class="wrap"><p class="eyebrow">Parkour · Movement · Holistic health</p>
-<h1>Strong body.<br>Strong mind.<br><em>Strong spirit.</em></h1>
+<div class="hero-vid" data-yt-bg="${V_.hero.id}" aria-hidden="true"></div>
+<div class="wrap"><p class="eyebrow">Parkour · Movement · Holistic health · Nature connection</p>
+<h1 class="strong" aria-label="Strong body. Strong mind. Strong spirit."><span class="big" aria-hidden="true">Strong</span><span class="three" aria-hidden="true"><span>body.</span><span>mind.</span><em>spirit.</em></span></h1>
 <p class="lede">Coaching that meets you where you are, online anywhere in the world or outdoors in Goa.</p>
 <div class="row-btns"><a class="btn btn-white" href="${wa("Hi Sudipta, I am interested in your coaching")}" ${ext}>${I.wa} Start on WhatsApp</a><a class="btn btn-line" href="courses.html">Explore courses</a></div></div>
 </section>
@@ -178,13 +204,7 @@ ${sec("creds", `<div class="wrap">
 <p class="fx-note"></p>
 </div></section>
 
-${sec("sec form-band bg-blue", `<div class="wrap">
-<div class="rv"><p class="eyebrow" style="margin-bottom:18px">Not sure which one?</p><h2 class="h2">Tell Sudipta<br><em>where you are.</em></h2>
-<p class="l">Leave your name and pick what you're curious about. This opens WhatsApp with your message ready, so Sudipta can help you choose.</p></div>
-${formHtml()}
-</div>`, "blue")}
-
-<section class="sec"><div class="wrap">
+<section class="sec" style="border-top:1px solid var(--line)"><div class="wrap">
 <div class="head-row"><div><p class="eyebrow" style="margin-bottom:16px">Real people, real change</p><h2 class="h2">In their <em>words.</em></h2></div><a class="text-link" href="testimonials.html">All stories →</a></div>
 <div class="tgrid">${TESTI.slice(0, 3).map(tcard).join("")}</div>
 </div></section>
@@ -203,8 +223,14 @@ ${sec("sec bio bg-blush", `<div class="wrap">
 <div class="sc rv"><div class="top"><b>${I.ig} Instagram</b><a class="text-link" href="${IG}" ${ext}>@sudipta03 →</a></div>
 <div class="ig">${["about-headstand", "leap-tree-smile", "about-backbend", "groupclass-vault", "about-blue-dress", "playsophy-tree"].map((i) => `<a href="${IG}" ${ext}><img src="${p}images/${i}.jpg" alt=""></a>`).join("")}</div></div>
 <div class="sc rv"><div class="top"><b>${I.yt} YouTube</b><a class="text-link" href="${YT}" ${ext}>@mindfulmonkeycoach →</a></div>
-<div class="ytl">${[["leap-back-lever", "Strength"], ["about-headstand", "Balance"], ["groupclass-vault", "Parkour"], ["about-na-portrait", "Stories"]].map(([i, c]) => `<a class="vid" href="${YT}" ${ext} style="aspect-ratio:16/11"><img src="${p}images/${i}.jpg" alt="">${I.play}<div class="cap" style="font-size:16px">${c}</div></a>`).join("")}</div></div>
+<div class="ytl">${[[V_.fitness, "Discipline"], [V_.goaParkour, "Parkour in Goa"], [V_.workout, "Home workout"], [V_.podcast, "Podcast"]].map(([v, c]) => `<a class="vid" ${ytA(v)} style="aspect-ratio:16/11"><img src="${ytThumb(v)}" alt="" loading="lazy">${I.play}<div class="cap" style="font-size:16px">${c}</div></a>`).join("")}</div></div>
 </div></div></section>
+
+${sec("sec form-band bg-blue", `<div class="wrap">
+<div class="rv"><p class="eyebrow" style="margin-bottom:18px">Not sure which one?</p><h2 class="h2">Tell Sudipta<br><em>where you are.</em></h2>
+<p class="l">Leave your name and pick what you're curious about. This opens WhatsApp with your message ready, so Sudipta can help you choose.</p></div>
+${formHtml()}
+</div>`, "blue")}
 `);
 
 function formHtml() {
@@ -281,11 +307,14 @@ ${sec("sec bg-brown", `<div class="wrap">
 <div class="rv"><p class="eyebrow" style="margin-bottom:18px">In the press</p><ul class="ticks">
 <li><a href="https://zeezest.com/episodes/health-healing-ep-5-763" ${ext}>Zee Zest: Parkour with Sudipta Mondal</a></li>
 <li><a href="https://www.indulgexpress.com/wellness/2026/Jul/27/parkour-mindfulness-and-the-wild-how-sudipta-mondal-turned-palawans-jungle-into-a-lesson" ${ext}>Indulge Express: Parkour, mindfulness and the wild</a></li>
-<li>T2 Online: survival show star Sudipta Mondal on Naked and Afraid</li><li>Times Now News: Sudipta Mondal on Naked and Afraid</li>
-<li>The Entrepreneurs of India: building a holistic health movement</li><li>Prime Video / IMDb: Naked and Afraid Aadimanav</li></ul></div>
+<li><a href="https://t2online.in/screen/streaming/survival-show-star--sudipta-mondal-on-naked-survival-and-her-ultimate-life-hacks/2006961" ${ext}>T2 Online: survival show star Sudipta Mondal on Naked and Afraid</a></li><li>Times Now News: Sudipta Mondal on Naked and Afraid</li>
+<li><a href="https://www.theentrepreneursofindia.in/post/how-sudipta-mondal-is-building-a-holistic-health-movement-rooted-in-science-and-nature" ${ext}>The Entrepreneurs of India: building a holistic health movement</a></li><li><a href="https://www.imdb.com/name/nm18615165/" ${ext}>IMDb: Sudipta Mondal</a></li></ul>
+<p class="eyebrow" style="margin:34px 0 18px">Podcasts</p><ul class="ticks">
+<li><a ${ytA(V_.podcast)}>On YouTube: a raw conversation on devotion, Maya and inner awakening</a></li>
+<li><a href="${SPOTIFY}" ${ext}>Listen on Spotify</a></li></ul></div>
 </div></section>
 
-${ytStrip(p, "Watch my <em>journey.</em>", [["about-na-portrait.jpg", "On screen", "Naked and Afraid"], ["about-headstand.jpg", "Practice", "Strength and balance"], ["groupclass-vault.jpg", "Parkour", "Goa parkour"]], "white")}
+${ytStrip(p, "Watch my <em>journey.</em>", [[V_.started, "Where it began", "When I started parkour"], [V_.fitness, "Strength", "Physical capacity and fitness"], [V_.podcast, "Podcast", "In conversation"]], "white")}
 `);
 
 /* =================== COURSES =================== */
@@ -307,7 +336,7 @@ ${COURSES.map((c, i) => `<div class="crow${i % 2 ? " r" : ""}"><a class="im" hre
 <ul class="dots">${DETAIL[c.key].pts.map((x) => `<li>${x.replace(/₹([\d,]+)/g, (m, n) => inr(+n.replace(/,/g, "")))}</li>`).join("")}</ul>
 <div class="bot"><div class="price"><b>${inr(c.p)}</b><span>${unit(c)}</span></div><a class="btn btn-blue" href="${waCourse(c.name)}" ${ext}>${I.wa} Ask about ${c.name}</a><a class="text-link" href="${p}${c.href}">Details →</a></div></div></div>`).join("")}
 </div></section>
-${ytStrip(p, "Try a class <em>first.</em>", [["groupclass-vault.jpg", "Group class", "Mornings in Panjim"], ["playsophy-tree.jpg", "Playsophy", "Move with freedom"], ["leap-back-lever.jpg", "LEAP", "Strength, step by step"]], "blush").replace('class="sec wave-top"', 'class="sec bg-blush wave-top"')}
+${ytStrip(p, "Try a class <em>first.</em>", [[V_.batch, "Group class", "The regular parkour batch"], ["playsophy-tree.jpg", "Playsophy", "Move with freedom"], ["leap-back-lever.jpg", "LEAP", "Strength, step by step"]], "blush").replace('class="sec wave-top"', 'class="sec bg-blush wave-top"')}
 `);
 
 /* =================== COURSE TEMPLATE =================== */
@@ -427,7 +456,8 @@ ${sec("sec bg-blue", `<div class="wrap pbox">
 <div style="margin-top:28px"><a class="btn btn-white" href="${waCourse("Group Classes")}" ${ext}>${I.wa} I'm interested in Group Classes</a></div></div>
 <table class="ptable rv"><tr><th>Package</th><th>Fee</th></tr>
 ${[["Drop-in", 850], ["6 sessions", 4200], ["8 sessions", 4800], ["10 sessions", 6000], ["12 sessions", 7000]].map(([k, v]) => `<tr><td>${k}</td><td><b>${inr(v)}</b></td></tr>`).join("")}</table>
-</div>`, "blue")}`,
+</div>`, "blue")}
+${ytStrip(p, "See a class <em>in action.</em>", [[V_.goaParkour, "Parkour in Goa", "Parkour for women in India"], [V_.panjim, "Panjim", "Exploring Panjim"], [V_.batch, "Group class", "The regular parkour batch"]], "white")}`,
 });
 
 /* DISCOVERY */
@@ -474,6 +504,10 @@ page("online-coaching/compare.html", { title: "LEAP vs Playsophy · Mindful Monk
 page("testimonials.html", { title: "Testimonials · Mindful Monkey", desc: "Real stories from LEAP, Playsophy and group-class students of Sudipta Mondal.", on: "Testimonials" }, (p) => `
 <section class="phero" style="padding-bottom:70px"><div class="wrap"><p class="eyebrow">Real people, real change</p><h1>In their <em>words.</em></h1></div></section>
 ${sec("sec bg-blush", `<div class="wrap"><div class="tgrid" style="grid-template-columns:1fr 1fr">${TESTI.map((t) => tcard({ ...t, q: t.full || t.q })).join("")}</div></div>`, "blush")}
+<section class="sec"><div class="wrap">
+<p class="eyebrow" style="margin-bottom:16px">On video</p><h2 class="h2" style="margin-bottom:40px;font-size:clamp(38px,4.4vw,56px)">Hear it <em>from them.</em></h2>
+<div class="yt-grid" style="grid-template-columns:1fr 1fr">${[[V_.arata, "Arata · 63 · Washington D.C.", "Healed hernia and knee pain, no surgery"], [V_.usha, "Usha · 43 · Pune", "Training with Sudipta"]].map(([v, k, c]) => `<a class="vid rv" ${ytA(v)}><img src="${ytThumb(v)}" alt="" loading="lazy">${I.play}<div class="cap"><small>${k}</small>${c}</div></a>`).join("")}</div>
+</div></section>
 <section class="sec"><div class="wrap two" style="align-items:start">
 <div class="rv"><p class="eyebrow" style="margin-bottom:18px">More transformations</p><h2 class="h2" style="font-size:clamp(36px,4vw,52px)">Small shifts, <em>big change.</em></h2></div>
 <ul class="ticks rv"><li><b>Arata, 63, Washington D.C.</b> Reversed an inguinal hernia without surgery and gained the stamina for headstands.</li>

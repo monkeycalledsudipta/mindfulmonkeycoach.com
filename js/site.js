@@ -84,6 +84,36 @@
     }).catch(function () {});
   }
 
+  /* YouTube: muted background video on the home hero (photo stays underneath until it plays),
+     and an on-page player for every [data-yt] link. Off for ?static and reduced motion. */
+  var still = /[?&]static\b/.test(location.search) || (window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches);
+  var NC = "https://www.youtube-nocookie.com/embed/";
+  var bg = document.querySelector("[data-yt-bg]");
+  if (bg && !still) {
+    var bid = bg.getAttribute("data-yt-bg");
+    var f = document.createElement("iframe");
+    f.src = NC + bid + "?autoplay=1&mute=1&loop=1&playlist=" + bid + "&controls=0&playsinline=1&rel=0&modestbranding=1&disablekb=1&iv_load_policy=3&fs=0";
+    f.allow = "autoplay; encrypted-media; picture-in-picture";
+    f.title = "Background video"; f.tabIndex = -1;
+    f.addEventListener("load", function () { setTimeout(function () { bg.classList.add("on"); }, 2200); });
+    bg.appendChild(f);
+  }
+  var modal = null;
+  function closeYt() { if (modal) { modal.remove(); modal = null; document.body.style.overflow = ""; } }
+  document.addEventListener("click", function (e) {
+    var a = e.target.closest && e.target.closest("a[data-yt]");
+    if (!a || e.metaKey || e.ctrlKey || e.shiftKey) return;
+    e.preventDefault();
+    var t = a.getAttribute("data-t");
+    modal = document.createElement("div");
+    modal.className = "ytm" + (a.hasAttribute("data-short") ? " short" : "");
+    modal.innerHTML = '<div class="box"><button class="x" aria-label="Close video">×</button><iframe allow="autoplay; encrypted-media; picture-in-picture; fullscreen" allowfullscreen title="Video"></iframe></div>';
+    modal.querySelector("iframe").src = NC + a.getAttribute("data-yt") + "?autoplay=1&rel=0&playsinline=1" + (t ? "&start=" + t : "");
+    modal.addEventListener("click", function (ev) { if (ev.target === modal || ev.target.classList.contains("x")) closeYt(); });
+    document.body.appendChild(modal); document.body.style.overflow = "hidden";
+  });
+  document.addEventListener("keydown", function (e) { if (e.key === "Escape") closeYt(); });
+
   /* About page bubbles: gentle float, drift away from the cursor, tap/click opens a short line */
   var orbit = document.querySelector(".orbit");
   if (orbit) {
