@@ -23,7 +23,7 @@ const EMAIL = "mindfulmonkeycoach@gmail.com";
 
 /* Sudipta's videos (from "Links for Website.docx"). short = YouTube Short (vertical), t = start second */
 const V_ = {
-  hero: { id: "ikum498DmQI", title: "Back to your roots" },
+  hero: { id: "ikum498DmQI", start: 41, title: "Back to your roots" }, // background starts (and loops back) at 0:41
   fitness: { id: "Si7zwOeqJ_s", title: "To be motivated, you must be disciplined" },
   started: { id: "dNDzgkRulg4", title: "There is fire within me" },
   workout: { id: "d_9e7xTF6Dw", title: "The MOP workout" },
@@ -32,6 +32,7 @@ const V_ = {
   goaParkour: { id: "VAX77Tc569U", title: "Parkour in Goa" },
   panjim: { id: "lVTysSQiOeI", title: "Exploring Panjim" },
   batch: { id: "LF9HbpPiQ4o", short: true, title: "The regular parkour batch" },
+  notParkour: { id: "OaknzN_cLRw", short: true, title: "What's parkour and what's not!" },
   podcast: { id: "4cw0-5gRD2w", t: 2974, title: "A raw conversation on devotion, Maya and inner awakening" },
 };
 const SPOTIFY = "https://open.spotify.com/episode/54Nv5suDxa9mOo6LTFc88x";
@@ -48,6 +49,7 @@ const I = {
   yt: `<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M23 7.2a3 3 0 0 0-2.1-2.1C19 4.6 12 4.6 12 4.6s-7 0-8.9.5A3 3 0 0 0 1 7.2 31 31 0 0 0 .5 12 31 31 0 0 0 1 16.8a3 3 0 0 0 2.1 2.1c1.9.5 8.9.5 8.9.5s7 0 8.9-.5a3 3 0 0 0 2.1-2.1 31 31 0 0 0 .5-4.8 31 31 0 0 0-.5-4.8ZM9.8 15.1V8.9L15.6 12l-5.8 3.1Z"/></svg>`,
   ig: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1" fill="currentColor"/></svg>`,
   fb: `<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M14 8.5V6.8c0-.8.2-1.3 1.4-1.3H17V2.6c-.3 0-1.3-.1-2.4-.1-2.4 0-4 1.5-4 4.1v1.9H8v3.2h2.6V22H14v-10.3h2.6l.4-3.2H14Z"/></svg>`,
+  sp: `<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 1.5a10.5 10.5 0 1 0 0 21 10.5 10.5 0 0 0 0-21Zm4.8 15.15a.66.66 0 0 1-.9.22c-2.48-1.51-5.6-1.86-9.27-1.02a.66.66 0 1 1-.3-1.28c4.02-.92 7.47-.52 10.25 1.18.31.19.41.59.22.9Zm1.29-2.86a.82.82 0 0 1-1.13.27c-2.84-1.75-7.17-2.25-10.53-1.23a.82.82 0 1 1-.48-1.57c3.84-1.17 8.61-.6 11.87 1.4.39.24.51.75.27 1.13Zm.11-2.98C14.8 8.8 9.18 8.6 5.92 9.6a.98.98 0 1 1-.57-1.88c3.74-1.14 9.96-.92 13.88 1.41a.98.98 0 0 1-1.03 1.68Z"/></svg>`,
   play: `<span class="play"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M8 5v14l11-7z"/></svg></span>`,
 };
 
@@ -91,13 +93,16 @@ const TESTI = [
     full: "I first met Sudipta during a nutrition course, where she was my senior. At the time, I had diabetes, chronic knee pain, limited mobility and could barely squat. I joined her one-on-one training simply hoping to move better, but LEAP gave me so much more. Over nearly three years and five to six rounds of LEAP, I trained both in person and online whenever I travelled. Today, in my 50s, I can run, bend without breaking, swing, jump, climb and move more athletically than I did in my 40s! What made LEAP even more special was that Sudipta also included couple sessions for my wife and me. Training together improved our health, helped us align better and even strengthened our relationship." },
   { q: "Over those four months, I lost weight, felt less stressed and saw my cholesterol levels become more balanced.", who: "Bhavesh", meta: "62 · Mumbai", c: "LEAP",
     full: "I did Sudipta's four-month LEAP program with her in person in Bombay. Over those four months, I lost weight, felt less stressed and saw my cholesterol levels become more balanced. We worked on movement, mindful eating, sleep and rest. She also introduced me to another client, Lavinder. Training together showed me how good it feels to connect with someone through shared, healthy choices." },
-  { q: "The Discovery & Consultation session convinced me to sign up for LEAP, and I've now been with the program for over 3 years.", who: "Sarah Jane Dias", meta: "Former Femina Miss India World", c: "Discovery",
+  { q: "The Discovery & Consultation session convinced me to sign up for LEAP, and I've now been with the program for over 3 years.", who: "Sarah Jane Dias", meta: "Former Femina Miss India World", c: "Discovery", sp: true,
     full: "As an actress, TV host, model and former Femina Miss India World titleholder, I came to Sudipta looking for a program that could improve my endurance, intensity, energy and flexibility, along with real nutritional guidance and an honest look at habits I didn't even realize were holding me back, things like sleep quality and supplement use. The Discovery & Consultation session convinced me to sign up for LEAP, and I've now been with the program for over 3 years. Sudipta has been a constant presence throughout, mapping out the roadmap, setting goals, and providing the nudging I need to actually hit them." },
   { q: "She helped me develop a relationship with my body that I never had before. The whole experience has made me feel fitter, livelier, healthier and more active.", who: "Arata", meta: "63 · Washington D.C.", c: "4-month programme", v: V_.arata },
   { q: "It was a body, mind and life transformation experience. This mindful coaching not only changes your perspective towards your body, it also upgrades your beliefs about movement and holistic health.", who: "Usha", meta: "43 · Pune", c: "Personal coaching", v: V_.usha,
     full: "My experience of personal coaching with Sudipta: it was body, mind and life transformation experience. This mindful coaching not only changes your perspective towards your body it also upgrades your beliefs about movement and holistic health. It's highly recommended for females because no one can understand the female body and mind needs more than a female coach." },
 ];
-const tcard = (t) => `<div class="t${t.hl ? " hl" : ""} rv"><q>“${t.q}”</q>${t.v ? `<a class="tw" ${ytA(t.v)}>${I.yt} Watch ${t.who}'s story</a>` : ""}<div class="who"><div><b>${t.who}</b>${t.meta}</div><span class="c">${t.c}</span></div></div>`;
+// Spotify podcast link shown under Sarah Jane's testimonial card
+const spLink = `<a class="sp-under rv" href="${SPOTIFY}" ${ext}>${I.sp}<span><small>Podcast</small>Listen to Sudipta on Spotify</span><b>→</b></a>`;
+const tcard = (t) => t.sp ? `<div class="tcol">${tcard1(t)}${spLink}</div>` : tcard1(t);
+const tcard1 = (t) => `<div class="t${t.hl ? " hl" : ""} rv"><q>“${t.q}”</q>${t.v ? `<a class="tw" ${ytA(t.v)}>${I.yt} Watch ${t.who}'s story</a>` : ""}<div class="who"><div><b>${t.who}</b>${t.meta}</div><span class="c">${t.c}</span></div></div>`;
 
 /* ---------- layout ---------- */
 function head(title, desc, p) {
@@ -135,14 +140,14 @@ ${L("testimonials.html", "Testimonials")}${L("contact.html", "Contact")}
 </div></header>
 <a class="wa-float" href="${wa(waText)}" ${ext} aria-label="Chat with Sudipta on WhatsApp">${I.wa}</a>`;
 }
-function footer(p) {
-  return `<section class="workout"><div class="wrap" style="max-width:1360px">
+function footer(p, tail = "") {
+  return `<section class="workout${tail ? " has-tail" : ""}"><div class="wrap" style="max-width:1360px">
 <a class="banner" ${ytA(V_.workout)}><img src="${p}images/about-plank.jpg" alt="Sudipta holding a plank on paralettes"><div class="inner">
 <p class="eyebrow" style="margin-bottom:16px">Free on YouTube</p>
 <h2>Sudipta's <em>Home Work Out</em></h2>
 <p>No gym, no equipment. Move with Sudipta from your living-room floor.</p>
 <span class="btn btn-white">${I.yt} Watch the workout</span></div>${I.play}</a>
-</div></section>
+</div></section>${tail}
 </main>
 <footer class="site-footer"><div class="wrap" style="max-width:1360px"><div class="fcols">
 <div><a class="brand" href="${p}index.html">${logo} mindful monkey</a><p style="font-size:15px;max-width:300px">Movement, play and mindful living with Sudipta Mondal. Online worldwide, outdoors in Goa.</p>
@@ -160,9 +165,9 @@ function footer(p) {
 </body>
 </html>`;
 }
-function page(file, { title, desc, on, over = false, waText = "Hi Sudipta, I would like to know more about your coaching" }, body) {
+function page(file, { title, desc, on, over = false, tail = "", waText = "Hi Sudipta, I would like to know more about your coaching" }, body) {
   const depth = file.split("/").length - 1, p = depth ? "../".repeat(depth) : "";
-  const html = head(title, desc, p) + header(p, on, over, waText) + "\n<main>\n" + body(p) + footer(p);
+  const html = head(title, desc, p) + header(p, on, over, waText) + "\n<main>\n" + body(p) + footer(p, tail);
   const fp = path.join(OUT, file);
   fs.mkdirSync(path.dirname(fp), { recursive: true });
   fs.writeFileSync(fp, html);
@@ -181,10 +186,23 @@ const ytStrip = (p, title, tiles, w) => sec("sec", `<div class="wrap">
     : `<a class="vid rv" href="${YT}" ${ext}><img src="${p}images/${src}" alt="">${I.play}<div class="cap"><small>${k}</small>${c}</div></a>`).join("")}</div>
 </div>`, w);
 
+/* home video carousel (js/site.js: arrows, swipe/drag, gentle auto-slide) */
+const HOME_VIDS = [[V_.fitness, "Discipline"], [V_.notParkour, "Parkour"], [V_.goaParkour, "Parkour in Goa"], [V_.workout, "Home workout"], [V_.usha, "Training with Sudipta"],
+  [V_.started, "Where it began"], [V_.batch, "Group class"], [V_.panjim, "Exploring Panjim"], [V_.podcast, "Podcast"]];
+const carousel = (vids) => `<div class="car rv" data-car><div class="car-track">${vids.map(([v, k]) => `<a class="vid car-item${v.short ? " short" : ""}" ${ytA(v)}><img src="${ytThumb(v)}" alt="" loading="lazy" draggable="false">${I.play}<div class="cap"><small>${k}</small>${v.title}</div></a>`).join("")}</div>
+<button type="button" class="car-btn prev" aria-label="Previous videos">←</button><button type="button" class="car-btn next" aria-label="Next videos">→</button>
+<div class="car-dots" aria-hidden="true"></div></div>`;
+/* home contact form, styled like the Home Work Out banner, sitting just below it */
+const formBanner = () => `<section class="workout form-banner"><div class="wrap" style="max-width:1360px"><div class="banner">
+<img src="images/leap-tree-smile.jpg" alt=""><div class="inner">
+<div><p class="eyebrow" style="margin-bottom:16px">Not sure which one?</p><h2>Tell Sudipta<br><em>where you are.</em></h2>
+<p>Leave your name and pick what you're curious about. This opens WhatsApp with your message ready, so Sudipta can help you choose.</p></div>
+${formHtml()}</div></div></div></section>`;
+
 /* =================== HOME =================== */
-page("index.html", { title: "Mindful Monkey · Parkour and holistic coaching with Sudipta Mondal", desc: "Parkour, movement and holistic health coaching with Sudipta Mondal. LEAP, Playsophy, Goa group classes and Discovery calls, all booked on WhatsApp.", on: "Home", over: true }, (p) => `
+page("index.html", { title: "Mindful Monkey · Parkour and holistic coaching with Sudipta Mondal", desc: "Parkour, movement and holistic health coaching with Sudipta Mondal. LEAP, Playsophy, Goa group classes and Discovery calls, all booked on WhatsApp.", on: "Home", over: true, tail: formBanner() }, (p) => `
 <section class="hero"><img src="${p}images/hero-storm-jump.jpg" alt="Sudipta mid-jump on a stormy Goa beach">
-<div class="hero-vid" data-yt-bg="${V_.hero.id}" aria-hidden="true"></div>
+<div class="hero-vid" data-yt-bg="${V_.hero.id}" data-start="${V_.hero.start}" aria-hidden="true"></div>
 <div class="wrap"><p class="eyebrow">Parkour · Movement · Holistic health · Nature connection</p>
 <h1 class="strong" aria-label="Strong body. Strong mind. Strong spirit."><span class="big" aria-hidden="true">STRONG</span><span class="three" aria-hidden="true"><span>body.</span><span>mind.</span><em>spirit.</em></span></h1>
 <p class="lede">Coaching that meets you where you are, online anywhere in the world or outdoors in Goa.</p>
@@ -217,21 +235,20 @@ ${sec("sec bio bg-blush", `<div class="wrap">
 <a class="text-link" href="about.html">Read my story →</a></div>
 </div>`, "blush")}
 
-<section class="sec"><div class="wrap">
-<p class="eyebrow" style="margin-bottom:16px">Follow along</p><h2 class="h2" style="margin-bottom:40px">Play along <em>every day.</em></h2>
-<div class="sgrid">
+<section class="sec vids"><div class="wrap">
+<div class="head-row" style="margin-bottom:38px"><div><p class="eyebrow" style="margin-bottom:16px">Follow along</p><h2 class="h2">Play along <em>every day.</em></h2></div>
+<a class="text-link" href="${YT}" ${ext}>${I.yt} Subscribe on YouTube</a></div>
+${carousel(HOME_VIDS)}
+<div class="sgrid" style="margin-top:28px">
 <div class="sc rv"><div class="top"><b>${I.ig} Instagram</b><a class="text-link" href="${IG}" ${ext}>@sudipta03 →</a></div>
 <div class="ig">${["about-headstand", "leap-tree-smile", "about-backbend", "groupclass-vault", "about-blue-dress", "playsophy-tree"].map((i) => `<a href="${IG}" ${ext}><img src="${p}images/${i}.jpg" alt=""></a>`).join("")}</div></div>
-<div class="sc rv"><div class="top"><b>${I.yt} YouTube</b><a class="text-link" href="${YT}" ${ext}>@mindfulmonkeycoach →</a></div>
-<div class="ytl">${[[V_.fitness, "Discipline"], [V_.goaParkour, "Parkour in Goa"], [V_.workout, "Home workout"], [V_.podcast, "Podcast"]].map(([v, c]) => `<a class="vid" ${ytA(v)} style="aspect-ratio:16/11"><img src="${ytThumb(v)}" alt="" loading="lazy">${I.play}<div class="cap" style="font-size:16px">${c}</div></a>`).join("")}</div></div>
+<a class="sc pod rv" href="${SPOTIFY}" ${ext}><div class="top"><b>${I.sp} Spotify</b><span class="text-link">Listen now →</span></div>
+<p class="eyebrow">Podcast</p><h3>A raw conversation on devotion, Maya and <em>inner awakening.</em></h3>
+<p>A long-form conversation with Sudipta. Put it on for your next walk.</p>
+<span class="btn btn-blue">${I.sp} Listen on Spotify</span></a>
 </div></div></section>
-
-${sec("sec form-band bg-blue", `<div class="wrap">
-<div class="rv"><p class="eyebrow" style="margin-bottom:18px">Not sure which one?</p><h2 class="h2">Tell Sudipta<br><em>where you are.</em></h2>
-<p class="l">Leave your name and pick what you're curious about. This opens WhatsApp with your message ready, so Sudipta can help you choose.</p></div>
-${formHtml()}
-</div>`, "blue")}
 `);
+
 
 function formHtml() {
   return `<form class="form wa-form rv">

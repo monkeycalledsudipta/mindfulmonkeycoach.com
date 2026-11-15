@@ -91,11 +91,25 @@
   var bg = document.querySelector("[data-yt-bg]");
   if (bg && !still) {
     var bid = bg.getAttribute("data-yt-bg");
+    var bst = parseInt(bg.getAttribute("data-start") || "0", 10) || 0;
     var f = document.createElement("iframe");
-    f.src = NC + bid + "?autoplay=1&mute=1&loop=1&playlist=" + bid + "&controls=0&playsinline=1&rel=0&modestbranding=1&disablekb=1&iv_load_policy=3&fs=0";
+    // starts at data-start; when it ends we seek back to data-start (YouTube's own loop would restart at 0)
+    f.src = NC + bid + "?autoplay=1&mute=1&start=" + bst + "&controls=0&playsinline=1&rel=0&modestbranding=1&disablekb=1&iv_load_policy=3&fs=0&enablejsapi=1&origin=" + encodeURIComponent(location.origin);
+    var ytCmd = function (func, args) { try { f.contentWindow.postMessage(JSON.stringify({ event: "command", func: func, args: args || [] }), "*"); } catch (e) {} };
+    window.addEventListener("message", function (e) {
+      if (e.source !== f.contentWindow) return;
+      var d; try { d = typeof e.data === "string" ? JSON.parse(e.data) : e.data; } catch (x) { return; }
+      if (!d) return;
+      var ended = d.event === "onStateChange" ? d.info === 0 : (d.info && d.info.playerState === 0);
+      if (ended) { ytCmd("seekTo", [bst, true]); ytCmd("playVideo"); }
+    });
     f.allow = "autoplay; encrypted-media; picture-in-picture";
     f.title = "Background video"; f.tabIndex = -1;
-    f.addEventListener("load", function () { setTimeout(function () { bg.classList.add("on"); }, 2200); });
+    f.addEventListener("load", function () {
+      try { f.contentWindow.postMessage(JSON.stringify({ event: "listening", id: "herobg" }), "*"); } catch (e) {}
+      ytCmd("addEventListener", ["onStateChange"]);
+      setTimeout(function () { bg.classList.add("on"); }, 2200);
+    });
     bg.appendChild(f);
   }
   var modal = null;
@@ -113,6 +127,50 @@
     document.body.appendChild(modal); document.body.style.overflow = "hidden";
   });
   document.addEventListener("keydown", function (e) { if (e.key === "Escape") closeYt(); });
+
+  /* video carousel: arrows, swipe (native scroll), mouse drag, dots, gentle auto-slide that pauses on hover/touch */
+  document.querySelectorAll("[data-car]").forEach(function (car) {
+    var tr = car.querySelector(".car-track"), prev = car.querySelector(".prev"), next = car.querySelector(".next"), dotsEl = car.querySelector(".car-dots");
+    var items = [].slice.call(tr.children);
+    var max = function () { return tr.scrollWidth - tr.clientWidth - 2; };
+    // index of the first item whose left edge is in view
+    var cur = function () { var x = tr.scrollLeft, on = 0; items.forEach(function (it, i) { if (it.offsetLeft - items[0].offsetLeft <= x + 10) on = i; }); return on; };
+    var to = function (i) { tr.scrollTo({ left: items[Math.max(0, Math.min(items.length - 1, i))].offsetLeft - items[0].offsetLeft, behavior: "smooth" }); };
+    var go = function (dir) {
+      if (dir > 0 && tr.scrollLeft >= max()) to(0);
+      else if (dir < 0 && tr.scrollLeft <= 2) tr.scrollTo({ left: tr.scrollWidth, behavior: "smooth" });
+      else to(cur() + dir);
+    };
+    var until = 0, hold = function () { until = Date.now() + 9000; };
+    prev.addEventListener("click", function () { go(-1); hold(); });
+    next.addEventListener("click", function () { go(1); hold(); });
+    items.forEach(function (it, i) { var d = document.createElement("button"); d.type = "button"; d.tabIndex = -1; d.addEventListener("click", function () { to(i); hold(); }); dotsEl.appendChild(d); });
+    var dots = [].slice.call(dotsEl.children);
+    var sync = function () {
+      var on = tr.scrollLeft >= max() ? items.length - 1 : cur();
+      dots.forEach(function (d, i) { d.classList.toggle("on", i === on); });
+      car.classList.toggle("at-start", tr.scrollLeft <= 2);
+    };
+    tr.addEventListener("scroll", function () { requestAnimationFrame(sync); }, { passive: true });
+    window.addEventListener("resize", sync); sync();
+    // mouse drag (touch uses native swipe); a drag must not open the video
+    var down = null, moved = false;
+    tr.addEventListener("pointerdown", function (e) { if (e.pointerType !== "mouse" || e.button) return; down = { x: e.clientX, l: tr.scrollLeft }; moved = false; });
+    window.addEventListener("pointermove", function (e) {
+      if (!down) return; var dx = e.clientX - down.x;
+      if (Math.abs(dx) > 6) { moved = true; car.classList.add("drag"); tr.scrollLeft = down.l - dx; }
+    });
+    window.addEventListener("pointerup", function () { if (down) { down = null; car.classList.remove("drag"); if (moved) { to(cur()); hold(); } } });
+    tr.addEventListener("click", function (e) { if (moved) { e.preventDefault(); e.stopPropagation(); moved = false; } }, true);
+    tr.addEventListener("dragstart", function (e) { e.preventDefault(); });
+    // auto-slide every 4.5s; pauses while hovered, touched, off screen or a video is open; off for ?static and reduced motion
+    var paused = false, seen = true;
+    car.addEventListener("mouseenter", function () { paused = true; });
+    car.addEventListener("mouseleave", function () { paused = false; });
+    tr.addEventListener("touchstart", hold, { passive: true });
+    if ("IntersectionObserver" in window) new IntersectionObserver(function (es) { seen = es[0].isIntersecting; }).observe(car);
+    if (!still) setInterval(function () { if (!paused && seen && Date.now() > until && !document.hidden && !document.querySelector(".ytm")) go(1); }, 4500);
+  });
 
   /* About page bubbles: gentle float, drift away from the cursor, tap/click opens a short line */
   var orbit = document.querySelector(".orbit");
