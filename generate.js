@@ -305,9 +305,9 @@ ${sec("sec bg-brown", `<div class="wrap">
 <li>Apex Movement parkour coach certification (ongoing)</li><li>Level 1 Parkour Coach, Parkour Generations London</li><li>Level 1 Ashtanga and Hatha Yoga Teacher</li>
 <li>Certified Personal Trainer and Functional Strength Trainer, FSSA / AFAA</li><li>CPR and AED, American Heart Association</li><li>Certified in Care and Prevention of Sports and Fitness Injuries</li></ul></div>
 <div class="rv"><p class="eyebrow" style="margin-bottom:18px">In the press</p><ul class="ticks">
-<li><a href="https://zeezest.com/episodes/health-healing-ep-5-763" ${ext}>Zee Zest: Parkour with Sudipta Mondal</a></li>
 <li><a href="https://www.indulgexpress.com/wellness/2026/Jul/27/parkour-mindfulness-and-the-wild-how-sudipta-mondal-turned-palawans-jungle-into-a-lesson" ${ext}>Indulge Express: Parkour, mindfulness and the wild</a></li>
-<li><a href="https://t2online.in/screen/streaming/survival-show-star--sudipta-mondal-on-naked-survival-and-her-ultimate-life-hacks/2006961" ${ext}>T2 Online: survival show star Sudipta Mondal on Naked and Afraid</a></li><li>Times Now News: Sudipta Mondal on Naked and Afraid</li>
+<li><a href="https://t2online.in/screen/streaming/survival-show-star--sudipta-mondal-on-naked-survival-and-her-ultimate-life-hacks/2006961" ${ext}>T2 Online: survival show star Sudipta Mondal on Naked and Afraid</a></li><li><a href="https://www.filmibeat.com/television/news/2026/naked-and-afraid-aadimanav-who-is-sudipa-mondal-meet-parkour-coach-part-of-warner-bros-discovery-522479.html" ${ext}>Filmibeat: Who is Sudipta Mondal? Meet the parkour coach on Naked and Afraid</a></li>
+<li><a href="https://www.tellyexpress.com/concrete-jungle-to-tropical-forest-parkour-coach-sudipa-mondal-lands-warner-bros-discoverys-naked-and-afraid-aadimanav/" ${ext}>Tellyexpress: Concrete jungle to tropical forest</a></li>
 <li><a href="https://www.theentrepreneursofindia.in/post/how-sudipta-mondal-is-building-a-holistic-health-movement-rooted-in-science-and-nature" ${ext}>The Entrepreneurs of India: building a holistic health movement</a></li><li><a href="https://www.imdb.com/name/nm18615165/" ${ext}>IMDb: Sudipta Mondal</a></li></ul>
 <p class="eyebrow" style="margin:34px 0 18px">Podcasts</p><ul class="ticks">
 <li><a ${ytA(V_.podcast)}>On YouTube: a raw conversation on devotion, Maya and inner awakening</a></li>
