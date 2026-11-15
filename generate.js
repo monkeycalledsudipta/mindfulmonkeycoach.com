@@ -71,7 +71,7 @@ const MED_SVG = `<svg viewBox="${(med.bbox.x0 - 4).toFixed(1)} ${(med.bbox.y0 - 
 
 /* ---------- data ---------- */
 const COURSES = [
-  { key: "leap", name: "LEAP", href: "online-coaching/leap.html", tag: "1-on-1 · twice a week", img: "leap-back-lever.jpg", feat: true,
+  { key: "leap", name: "LEAP", href: "online-coaching/leap.html", tag: "1-on-1 · twice a week", img: "leap-back-lever.jpg",
     d: "Make the leap into a more intentional life. Movement, nutrition, mindset and recovery, fully personal.",
     p: 160000, u: "one-time · instalments available" },
   { key: "playsophy", name: "Playsophy", href: "online-coaching/playsophy.html", tag: "Women only · 12 weeks", img: "playsophy-tree.jpg",
