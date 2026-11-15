@@ -186,7 +186,7 @@ page("index.html", { title: "Mindful Monkey · Parkour and holistic coaching wit
 <section class="hero"><img src="${p}images/hero-storm-jump.jpg" alt="Sudipta mid-jump on a stormy Goa beach">
 <div class="hero-vid" data-yt-bg="${V_.hero.id}" aria-hidden="true"></div>
 <div class="wrap"><p class="eyebrow">Parkour · Movement · Holistic health · Nature connection</p>
-<h1 class="strong" aria-label="Strong body. Strong mind. Strong spirit."><span class="big" aria-hidden="true">Strong</span><span class="three" aria-hidden="true"><span>body.</span><span>mind.</span><em>spirit.</em></span></h1>
+<h1 class="strong" aria-label="Strong body. Strong mind. Strong spirit."><span class="big" aria-hidden="true">STRONG</span><span class="three" aria-hidden="true"><span>body.</span><span>mind.</span><em>spirit.</em></span></h1>
 <p class="lede">Coaching that meets you where you are, online anywhere in the world or outdoors in Goa.</p>
 <div class="row-btns"><a class="btn btn-white" href="${wa("Hi Sudipta, I am interested in your coaching")}" ${ext}>${I.wa} Start on WhatsApp</a><a class="btn btn-line" href="courses.html">Explore courses</a></div></div>
 </section>

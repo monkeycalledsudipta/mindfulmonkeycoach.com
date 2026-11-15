@@ -88,7 +88,7 @@ main>section:has(+ .wave-top){padding-bottom:170px}
 .hero-vid{position:absolute;inset:0;z-index:0;overflow:hidden;pointer-events:none;container-type:size}
 .hero-vid iframe{position:absolute;top:50%;left:50%;width:max(100cqw,177.78cqh);height:max(100cqh,56.25cqw);transform:translate(-50%,-50%) scale(1.18);border:0;opacity:0;transition:opacity 1.4s ease}
 .hero-vid.on iframe{opacity:1}
-.hero h1.strong{display:flex;align-items:last baseline;gap:.14em;max-width:none;font-size:clamp(88px,13.5vw,196px);line-height:.86;letter-spacing:-.045em;margin-bottom:.2em}
+.hero h1.strong{display:flex;align-items:last baseline;gap:.14em;max-width:none;font-size:clamp(72px,10.5vw,160px);line-height:.86;letter-spacing:-.02em;margin-bottom:.12em}
 .strong .three{display:flex;flex-direction:column;font-size:.258em;line-height:1;letter-spacing:-.02em}
 .strong .three em{font-style:normal;color:inherit}
 .row-btns{display:flex;gap:14px;align-items:center;flex-wrap:wrap}
@@ -384,7 +384,7 @@ footer .base a:hover{color:#fff}
   .bub{font-size:11px;padding:6px}
   .bub .tip{width:180px}
   .hero h1{font-size:50px}
-  .hero h1.strong{font-size:21vw}
+  .hero h1.strong{font-size:15.5vw}
   .steps{gap:26px}
   .steps b{font-size:44px}
   .ptable th,.ptable td{padding:14px 14px}
