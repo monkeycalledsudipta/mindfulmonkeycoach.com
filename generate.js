@@ -309,7 +309,7 @@ ${sec("sec story bg-blush", `<div class="wrap">
 <p>As a woman, I understand that women often need a different kind of space to feel safe, strong and seen. And I believe men, too, deserve spaces where they can soften, reconnect with themselves and receive the love and support they may have spent years learning to live without.</p>
 <p>My mission is to bring people back to the joy of being alive through movement, play, mindful living and the lessons life has taught me. To create a space where women and men can explore their strength, embrace their vulnerability and come home to themselves, with greater freedom, clarity and self-trust.</p>
 <p>Because I believe that life is not about avoiding obstacles or constantly trying to fix ourselves. It is about learning to move through life with courage, curiosity and a little more play.</p>
-<p class="k">Faith over fear. And sometimes, the way forward is to play.</p>
+<p class="k">The obstacle is the way. And sometimes, the way forward is to play.</p>
 <p class="sig">Sudipta</p>
 </div></div>`, "blush")}
 
