@@ -23,7 +23,7 @@ const EMAIL = "mindfulmonkeycoach@gmail.com";
 
 /* Sudipta's videos (from "Links for Website.docx"). short = YouTube Short (vertical), t = start second */
 const V_ = {
-  hero: { id: "ikum498DmQI", start: 41, title: "Back to your roots" }, // background starts (and loops back) at 0:41
+  hero: { id: "ikum498DmQI", start: 41, title: "Back to your roots" }, // source of the home hero loop: images/hero-loop*.mp4 = 0:41 to 2:15, letterbox and subtitles cropped
   fitness: { id: "Si7zwOeqJ_s", title: "To be motivated, you must be disciplined" },
   started: { id: "dNDzgkRulg4", title: "There is fire within me" },
   workout: { id: "d_9e7xTF6Dw", title: "The MOP workout" },
@@ -35,7 +35,19 @@ const V_ = {
   notParkour: { id: "OaknzN_cLRw", short: true, title: "What's parkour and what's not!" },
   podcast: { id: "4cw0-5gRD2w", t: 2974, title: "A raw conversation on devotion, Maya and inner awakening" },
 };
-const SPOTIFY = "https://open.spotify.com/episode/54Nv5suDxa9mOo6LTFc88x";
+const SPOTIFY = "https://open.spotify.com/episode/54Nv5suDxa9mOo6LTFc88x"; // episode: "Reclaiming Your Inner Power with Sudipta Mondal"
+
+/* About: "Articles I read". img = local copy of the article's own banner (og:image) */
+const READS = [
+  { url: "https://www.sanctuarynaturefoundation.org/article/the-gut-connection", img: "read-gut-connection.jpg", src: "Sanctuary Nature Foundation",
+    title: "The Gut Connection", d: "Soil is like a giant digestive system, where matter is broken down, absorbed and recycled by millions of tiny creatures called microbes." },
+  { url: "https://danedwardes.com/why-you-were-a-better-mover-at-seven/", img: "read-better-mover.jpg", src: "Dan Edwardes",
+    title: "Why You Were a Better Mover at Seven", d: "The most physically literate version of you has probably already existed. It was you at age seven, scrambling up a tree and rolling down a hill." },
+];
+
+/* Courses: upcoming bootcamps, retreats and workshops. Past events drop off automatically at build time.
+   { type: "Bootcamp" | "Retreat" | "Workshop", title, dates, end: "YYYY-MM-DD", where, price (INR, optional), d, img (optional, in images/) } */
+const EVENTS = process.env.MM_SAMPLE_EVENTS ? require("./site-src/sample-events.json") : [];
 const ytUrl = (v) => v.short ? `https://www.youtube.com/shorts/${v.id}` : `https://www.youtube.com/watch?v=${v.id}${v.t ? `&t=${v.t}s` : ""}`;
 const ytThumb = (v) => `https://i.ytimg.com/vi/${v.id}/maxresdefault.jpg`;
 // a link that opens the video in an on-page player (js/site.js); falls back to YouTube
@@ -86,6 +98,9 @@ const COURSES = [
     d: "Not sure where to start? A focused hour with Sudipta to map out the right path for you.",
     p: 2500, u: "per session" },
 ];
+// short button label per course, and the course name as it reads after "interested in"
+const BTN = { LEAP: "Ask about LEAP", Playsophy: "Ask about Playsophy", "Group Classes": "Ask about classes", "Discovery Call": "Book a call" };
+const AS = (n) => (n === "Discovery Call" ? "a Discovery Call" : n);
 const unit = (c) => c.u.replace(/₹([\d,]+)/, (m, n) => inr(+n.replace(/,/g, "")));
 
 const TESTI = [
@@ -97,7 +112,7 @@ const TESTI = [
     full: "As an actress, TV host, model and former Femina Miss India World titleholder, I came to Sudipta looking for a program that could improve my endurance, intensity, energy and flexibility, along with real nutritional guidance and an honest look at habits I didn't even realize were holding me back, things like sleep quality and supplement use. The Discovery & Consultation session convinced me to sign up for LEAP, and I've now been with the program for over 3 years. Sudipta has been a constant presence throughout, mapping out the roadmap, setting goals, and providing the nudging I need to actually hit them." },
   { q: "She helped me develop a relationship with my body that I never had before. The whole experience has made me feel fitter, livelier, healthier and more active.", who: "Arata", meta: "63 · Washington D.C.", c: "4-month programme", v: V_.arata },
   { q: "It was a body, mind and life transformation experience. This mindful coaching not only changes your perspective towards your body, it also upgrades your beliefs about movement and holistic health.", who: "Usha", meta: "43 · Pune", c: "Personal coaching", v: V_.usha,
-    full: "My experience of personal coaching with Sudipta: it was body, mind and life transformation experience. This mindful coaching not only changes your perspective towards your body it also upgrades your beliefs about movement and holistic health. It's highly recommended for females because no one can understand the female body and mind needs more than a female coach." },
+    full: "My experience of personal coaching with Sudipta: it was a body, mind and life transformation experience. This mindful coaching not only changes your perspective towards your body, it also upgrades your beliefs about movement and holistic health. It's highly recommended for females because no one can understand the female body and mind needs more than a female coach." },
 ];
 // Spotify podcast link shown under Sarah Jane's testimonial card
 const spLink = `<a class="sp-under rv" href="${SPOTIFY}" ${ext}>${I.sp}<span><small>Podcast</small>Listen to Sudipta on Spotify</span><b>→</b></a>`;
@@ -132,7 +147,7 @@ function header(p, on, over, waText) {
 <nav class="links" aria-label="Main">
 ${L("index.html", "Home")}${L("about.html", "About")}
 <span class="has-sub">${L("courses.html", "Courses")}<span class="sub">
-<a href="${p}online-coaching/leap.html">LEAP · 1-on-1</a><a href="${p}online-coaching/playsophy.html">Playsophy · women only</a><a href="${p}group-classes.html">Group Classes · Goa</a><a href="${p}discovery.html">Discovery Call</a><a href="${p}online-coaching/compare.html">Compare LEAP and Playsophy</a></span></span>
+<a href="${p}online-coaching/leap.html">LEAP · 1-on-1</a><a href="${p}online-coaching/playsophy.html">Playsophy · women only</a><a href="${p}group-classes.html">Group Classes · Goa</a><a href="${p}discovery.html">Discovery Call</a><a href="${p}courses.html#upcoming">Bootcamps, retreats &amp; workshops</a><a href="${p}online-coaching/compare.html">Compare LEAP and Playsophy</a></span></span>
 ${L("testimonials.html", "Testimonials")}${L("contact.html", "Contact")}
 </nav>
 <a class="btn btn-blue hdr-cta" href="${wa(waText)}" ${ext}>${I.wa} Chat on WhatsApp</a>
@@ -169,7 +184,7 @@ function page(file, { title, desc, on, over = false, tail = "", waText = "Hi Sud
   const depth = file.split("/").length - 1, p = depth ? "../".repeat(depth) : "";
   let html = head(title, desc, p) + header(p, on, over, waText) + "\n<main>\n" + body(p) + footer(p, tail);
   // phones: images below the first screen load only when scrolled near (hero and page-top photos stay eager)
-  html = html.replace(/<img (?![^>]*loading=)(?![^>]*(?:hero-|class="a"))/g, '<img loading="lazy" decoding="async" ');
+  html = html.replace(/<img (?![^>]*\sloading=)(?![^>]*(?:hero-|class="a"))/g, '<img loading="lazy" decoding="async" ');
   html = html.replace(/(<div class="im"><img )loading="lazy" decoding="async" /, "$1");
   const fp = path.join(OUT, file);
   fs.mkdirSync(path.dirname(fp), { recursive: true });
@@ -179,7 +194,7 @@ function page(file, { title, desc, on, over = false, tail = "", waText = "Hi Sud
 
 const card = (c, p) => `<div class="card${c.feat ? " feat" : ""} rv"><a class="ph" href="${p}${c.href}"><img src="${p}images/${c.img}" alt="${c.name}"><span class="tag">${c.tag}</span></a>
 <div class="bd"><h3><a href="${p}${c.href}">${c.name}</a></h3><p class="d">${c.d}</p><div class="price"><b>${inr(c.p)}</b><span>${unit(c)}</span></div>
-<a class="btn btn-blue" href="${waCourse(c.name)}" ${ext}>${I.wa} Ask about ${c.name.split(" ")[0]}</a><a class="more" href="${p}${c.href}">See details →</a></div></div>`;
+<a class="btn btn-blue" href="${waCourse(AS(c.name))}" ${ext}>${I.wa} ${BTN[c.name]}</a><a class="more" href="${p}${c.href}">See details →</a></div></div>`;
 
 const ytStrip = (p, title, tiles, w) => sec("sec", `<div class="wrap">
 <div class="head-row" style="margin-bottom:38px"><div><p class="eyebrow" style="margin-bottom:14px">On YouTube · @mindfulmonkeycoach</p><h2 class="h2" style="font-size:clamp(38px,4.4vw,56px)">${title}</h2></div>
@@ -205,7 +220,7 @@ ${formHtml()}</div></div></div></section>`;
 /* =================== HOME =================== */
 page("index.html", { title: "Mindful Monkey · Parkour and holistic coaching with Sudipta Mondal", desc: "Parkour, movement and holistic health coaching with Sudipta Mondal. LEAP, Playsophy, Goa group classes and Discovery calls, all booked on WhatsApp.", on: "Home", over: true, tail: formBanner() }, (p) => `
 <section class="hero"><img src="${p}images/hero-storm-jump.jpg" alt="Sudipta mid-jump on a stormy Goa beach">
-<div class="hero-vid" data-yt-bg="${V_.hero.id}" data-start="${V_.hero.start}" aria-hidden="true"></div>
+<video class="hero-vid" data-lg="${p}images/hero-loop.mp4" data-sm="${p}images/hero-loop-sm.mp4" muted playsinline loop preload="none" aria-hidden="true" tabindex="-1"></video>
 <div class="wrap"><p class="eyebrow">Parkour · Movement · Holistic health · Nature connection</p>
 <h1 class="strong" aria-label="Strong body. Strong mind. Strong spirit."><span class="big" aria-hidden="true">STRONG</span><span class="three" aria-hidden="true"><span>body.</span><span>mind.</span><em>spirit.</em></span></h1>
 <p class="lede">Coaching that meets you where you are, online anywhere in the world or outdoors in Goa.</p>
@@ -246,7 +261,7 @@ ${carousel(HOME_VIDS)}
 <div class="sc rv"><div class="top"><b>${I.ig} Instagram</b><a class="text-link" href="${IG}" ${ext}>@sudipta03 →</a></div>
 <div class="ig">${["about-headstand", "leap-tree-smile", "about-backbend", "groupclass-vault", "about-blue-dress", "playsophy-tree"].map((i) => `<a href="${IG}" ${ext}><img src="${p}images/${i}.jpg" alt=""></a>`).join("")}</div></div>
 <a class="sc pod rv" href="${SPOTIFY}" ${ext}><div class="top"><b>${I.sp} Spotify</b><span class="text-link">Listen now →</span></div>
-<p class="eyebrow">Podcast</p><h3>A raw conversation on devotion, Maya and <em>inner awakening.</em></h3>
+<p class="eyebrow">Podcast</p><h3>Reclaiming your <em>inner power.</em></h3>
 <p>A long-form conversation with Sudipta. Put it on for your next walk.</p>
 <span class="btn btn-blue">${I.sp} Listen on Spotify</span></a>
 </div></div></section>
@@ -258,7 +273,7 @@ function formHtml() {
 <label for="f-name">Your name</label><input id="f-name" type="text" name="name" placeholder="Your name" autocomplete="name">
 <label for="f-phone">Your WhatsApp number</label><input id="f-phone" type="tel" name="phone" placeholder="+91 98xxx xxxxx" autocomplete="tel">
 <label for="f-int">I'm interested in</label><select id="f-int" name="interest">
-<option>LEAP</option><option>Playsophy</option><option>Group Classes in Goa</option><option>a Discovery Call</option><option>Not sure yet</option></select>
+<option>LEAP</option><option>Playsophy</option><option>Group Classes in Goa</option><option value="a Discovery Call">A Discovery Call</option><option>Not sure yet</option></select>
 <label class="chk"><input type="checkbox" name="join" checked> Add me to Sudipta's daily WhatsApp group: fun facts, quick exercises and offers.</label>
 <button class="btn btn-blue" type="submit">${I.wa} Send to Sudipta</button>
 <small>Opens WhatsApp with your message ready. Nothing is stored on this website.</small>
@@ -285,15 +300,16 @@ page("about.html", { title: "About Sudipta Mondal · Mindful Monkey", desc: "Sud
 </div></section>
 
 ${sec("sec story bg-blush", `<div class="wrap">
-<div><p class="eyebrow" style="margin-bottom:18px">My story</p><h2 class="h2" style="font-size:clamp(40px,4.6vw,60px)">The obstacle is <em>the way.</em></h2>
+<div><p class="eyebrow" style="margin-bottom:18px">My story</p><h2 class="h2" style="font-size:clamp(40px,4.6vw,60px)">Faith over <em>fear.</em></h2>
 <div class="tl"><div><b>30</b><span>Started training</span></div><div><b>31</b><span>First push-up</span></div><div><b>34</b><span>First front flip</span></div>
-<div><b>Naked and Afraid</b><span>First Indian woman finalist</span></div><div><b>Apex Movement</b><span>Coach certification, ongoing</span></div></div></div>
+<div><b>Naked and Afraid</b><span>First Indian woman finalist</span></div><div><b>Apex Movement</b><span>Coach certification, ongoing</span></div></div>
+<h2 class="h2 tl-after" style="font-size:clamp(40px,4.6vw,60px)">Care over <em>cure.</em></h2></div>
 <div class="txt rv">
 <p>I have spent many years working through my own insecurity, pain, financial struggles, confusion and fear. I found my way back to myself through play, movement, self-care, nature and joy.</p>
 <p>As a woman, I understand that women often need a different kind of space to feel safe, strong and seen. And I believe men, too, deserve spaces where they can soften, reconnect with themselves and receive the love and support they may have spent years learning to live without.</p>
 <p>My mission is to bring people back to the joy of being alive through movement, play, mindful living and the lessons life has taught me. To create a space where women and men can explore their strength, embrace their vulnerability and come home to themselves, with greater freedom, clarity and self-trust.</p>
 <p>Because I believe that life is not about avoiding obstacles or constantly trying to fix ourselves. It is about learning to move through life with courage, curiosity and a little more play.</p>
-<p class="k">The obstacle is the way. And sometimes, the way forward is to play.</p>
+<p class="k">Faith over fear. And sometimes, the way forward is to play.</p>
 <p class="sig">Sudipta</p>
 </div></div>`, "blush")}
 
@@ -326,15 +342,25 @@ ${sec("sec bg-brown", `<div class="wrap">
 <li>Certified Personal Trainer and Functional Strength Trainer, FSSA / AFAA</li><li>CPR and AED, American Heart Association</li><li>Certified in Care and Prevention of Sports and Fitness Injuries</li></ul></div>
 <div class="rv"><p class="eyebrow" style="margin-bottom:18px">In the press</p><ul class="ticks">
 <li><a href="https://www.indulgexpress.com/wellness/2026/Jul/27/parkour-mindfulness-and-the-wild-how-sudipta-mondal-turned-palawans-jungle-into-a-lesson" ${ext}>Indulge Express: Parkour, mindfulness and the wild</a></li>
-<li><a href="https://t2online.in/screen/streaming/survival-show-star--sudipta-mondal-on-naked-survival-and-her-ultimate-life-hacks/2006961" ${ext}>T2 Online: survival show star Sudipta Mondal on Naked and Afraid</a></li><li><a href="https://www.filmibeat.com/television/news/2026/naked-and-afraid-aadimanav-who-is-sudipa-mondal-meet-parkour-coach-part-of-warner-bros-discovery-522479.html" ${ext}>Filmibeat: Who is Sudipta Mondal? Meet the parkour coach on Naked and Afraid</a></li>
+<li><a href="https://t2online.in/screen/streaming/survival-show-star--sudipta-mondal-on-naked-survival-and-her-ultimate-life-hacks/2006961" ${ext}>T2 Online: Survival show star Sudipta Mondal on Naked and Afraid</a></li><li><a href="https://www.filmibeat.com/television/news/2026/naked-and-afraid-aadimanav-who-is-sudipa-mondal-meet-parkour-coach-part-of-warner-bros-discovery-522479.html" ${ext}>Filmibeat: Who is Sudipta Mondal? Meet the parkour coach on Naked and Afraid</a></li>
 <li><a href="https://www.tellyexpress.com/concrete-jungle-to-tropical-forest-parkour-coach-sudipa-mondal-lands-warner-bros-discoverys-naked-and-afraid-aadimanav/" ${ext}>Tellyexpress: Concrete jungle to tropical forest</a></li>
-<li><a href="https://www.theentrepreneursofindia.in/post/how-sudipta-mondal-is-building-a-holistic-health-movement-rooted-in-science-and-nature" ${ext}>The Entrepreneurs of India: building a holistic health movement</a></li><li><a href="https://www.imdb.com/name/nm18615165/" ${ext}>IMDb: Sudipta Mondal</a></li></ul>
+<li><a href="https://www.theentrepreneursofindia.in/post/how-sudipta-mondal-is-building-a-holistic-health-movement-rooted-in-science-and-nature" ${ext}>The Entrepreneurs of India: Building a holistic health movement</a></li>
+<li><a href="https://yourstory.com/herstory/2021/07/100-emerging-women-leaders-woman-domestic-violence-fitness-trainer" ${ext}>YourStory HerStory: 100 Emerging Women Leaders</a></li>
+<li><a href="https://photogallery.indiatimes.com/celebs/celeb-themes/meet-holistic-fitness-coach-sudipta-mondal-who-talks-about-minimalism-through-her-bald-photoshoot/articleshow/79003426.cms" ${ext}>ETimes: Sudipta Mondal on minimalism and her bald photoshoot</a></li>
+<li><a href="https://www.imdb.com/name/nm18615165/" ${ext}>IMDb: Sudipta Mondal</a></li></ul>
 <p class="eyebrow" style="margin:34px 0 18px">Podcasts</p><ul class="ticks">
-<li><a ${ytA(V_.podcast)}>On YouTube: a raw conversation on devotion, Maya and inner awakening</a></li>
-<li><a href="${SPOTIFY}" ${ext}>Listen on Spotify</a></li></ul></div>
+<li><a ${ytA(V_.podcast)}>On YouTube: A raw conversation on devotion, Maya and inner awakening</a></li>
+<li><a href="${SPOTIFY}" ${ext}>On Spotify: Reclaiming your inner power with Sudipta Mondal</a></li></ul></div>
 </div></section>
 
-${ytStrip(p, "Watch my <em>journey.</em>", [[V_.started, "Where it began", "When I started parkour"], [V_.fitness, "Strength", "Physical capacity and fitness"], [V_.podcast, "Podcast", "In conversation"]], "white")}
+${sec("sec reads", `<div class="wrap">
+<div class="head-row"><div><p class="eyebrow" style="margin-bottom:16px">Reading list</p><h2 class="h2" style="font-size:clamp(40px,4.6vw,60px)">Articles <em>I read.</em></h2></div>
+<p style="font-size:15px;max-width:380px">Pieces on movement, food and nature that I keep coming back to.</p></div>
+<div class="rgrid${READS.length < 3 ? " n" + READS.length : ""}">${READS.map((r) => `<a class="rcard rv" href="${r.url}" ${ext}><span class="rim"><img src="${p}images/${r.img}" alt=""></span>
+<span class="rbd"><small>${r.src}</small><b>${r.title}</b><span class="rd">${r.d}</span><span class="rmore">Read the article ↗</span></span></a>`).join("")}</div>
+</div>`, "white").replace('<section class="sec reads', '<section id="articles" class="sec reads')}
+
+${ytStrip(p, "Watch my <em>journey.</em>", [[V_.started, "Where it began", "When I started parkour"], [V_.fitness, "Strength", "Physical capacity and fitness"], [V_.podcast, "Podcast", "In conversation"]], "blush").replace('class="sec wave-top"', 'class="sec bg-blush wave-top"')}
 `);
 
 /* =================== COURSES =================== */
@@ -344,6 +370,23 @@ const DETAIL = {
   group: { long: "Outdoor parkour and movement classes in Panjim, three mornings a week. Rotating outdoor locations, shared ahead of each class.", pts: ["Mon · Wed · Fri mornings", "6:45 to 7:45/8:00 AM", "Drop-in or monthly packs", "Rain or shine, always outdoors"] },
   discovery: { long: "One hour with Sudipta on video. Get to know her method before committing to LEAP, or get focused help as a current or past client.", pts: ["60-minute 1-on-1 video call", "Discovery ₹2,500 · Consultation ₹5,000", "Paid before your slot", "A clear next step"] },
 };
+/* upcoming bootcamps / retreats / workshops (EVENTS above); an empty list shows a "next one" WhatsApp prompt */
+const EV_IMG = { Bootcamp: "groupclass-vault.jpg", Retreat: "about-sunflower.jpg", Workshop: "playsophy-tree.jpg" };
+function eventsSection(p) {
+  const today = new Date().toISOString().slice(0, 10);
+  const list = EVENTS.filter((e) => !e.end || e.end >= today).sort((a, b) => (a.end || "").localeCompare(b.end || ""));
+  const evCard = (e) => `<div class="ev rv"><div class="ev-im"><img src="${p}images/${e.img || EV_IMG[e.type] || "groupclass-vault.jpg"}" alt=""><span class="tag">${e.type}</span></div>
+<div class="ev-bd"><p class="ev-when">${e.dates}${e.where ? ` · ${e.where}` : ""}</p><h3>${e.title}</h3><p class="d">${e.d}</p>
+${e.price ? `<div class="price"><b>${inr(e.price)}</b>${e.unit ? `<span>${e.unit}</span>` : ""}</div>` : ""}
+<a class="btn btn-blue" href="${wa(`Hi I am interested in the ${e.title} ${e.type.toLowerCase()}`)}" ${ext}>${I.wa} I'm interested</a></div></div>`;
+  return sec("sec bg-blue events", `<div class="wrap">
+<div class="head-row"><div><p class="eyebrow" style="margin-bottom:16px">Coming up</p><h2 class="h2" style="font-size:clamp(40px,4.8vw,64px)">Upcoming bootcamps,<br>retreats <em>and workshops.</em></h2></div>
+<p style="font-size:15px;max-width:340px;color:rgba(255,255,255,.82)">New dates are announced here as soon as they are set. Message Sudipta to save your place.</p></div>
+${list.length ? `<div class="evgrid">${list.map(evCard).join("")}</div>`
+    : `<div class="ev-empty rv"><div><b>The next one is being planned.</b><p>Nothing is open for booking right now. New bootcamps, retreats and workshops are announced here and in Sudipta's WhatsApp group first.</p></div>
+<a class="btn btn-white" href="${wa("Hi Sudipta, please let me know about your next bootcamp, retreat or workshop")}" ${ext}>${I.wa} Tell me about the next one</a></div>`}
+</div>`, "blue").replace('<section class="sec bg-blue events', '<section id="upcoming" class="sec bg-blue events');
+}
 page("courses.html", { title: "Courses · Mindful Monkey", desc: "LEAP, Playsophy, Goa group classes and Discovery calls with Sudipta Mondal.", on: "Courses" }, (p) => `
 <section class="phero" style="padding-bottom:40px"><div class="wrap">
 <p class="eyebrow">Courses · Online worldwide · Outdoors in Goa</p><h1>Find your <em>way in.</em></h1>
@@ -354,20 +397,21 @@ page("courses.html", { title: "Courses · Mindful Monkey", desc: "LEAP, Playsoph
 ${COURSES.map((c, i) => `<div class="crow${i % 2 ? " r" : ""}"><a class="im" href="${p}${c.href}"><img src="${p}images/${c.img}" alt="${c.name}"><span class="tag">${c.tag}</span></a>
 <div class="rv"><p class="eyebrow" style="margin-bottom:14px">0${i + 1}</p><h2><a href="${p}${c.href}">${c.name}</a></h2><p class="l">${DETAIL[c.key].long}</p>
 <ul class="dots">${DETAIL[c.key].pts.map((x) => `<li>${x.replace(/₹([\d,]+)/g, (m, n) => inr(+n.replace(/,/g, "")))}</li>`).join("")}</ul>
-<div class="bot"><div class="price"><b>${inr(c.p)}</b><span>${unit(c)}</span></div><a class="btn btn-blue" href="${waCourse(c.name)}" ${ext}>${I.wa} Ask about ${c.name}</a><a class="text-link" href="${p}${c.href}">Details →</a></div></div></div>`).join("")}
+<div class="bot"><div class="price"><b>${inr(c.p)}</b><span>${unit(c)}</span></div><a class="btn btn-blue" href="${waCourse(AS(c.name))}" ${ext}>${I.wa} ${c.name === "Discovery Call" ? "Book a Discovery Call" : "Ask about " + c.name}</a><a class="text-link" href="${p}${c.href}">Details →</a></div></div></div>`).join("")}
 </div></section>
+${eventsSection(p)}
 ${ytStrip(p, "Try a class <em>first.</em>", [[V_.batch, "Group class", "The regular parkour batch"], ["playsophy-tree.jpg", "Playsophy", "Move with freedom"], ["leap-back-lever.jpg", "LEAP", "Strength, step by step"]], "blush").replace('class="sec wave-top"', 'class="sec bg-blush wave-top"')}
 `);
 
 /* =================== COURSE TEMPLATE =================== */
 function coursePage(file, o) {
-  page(file, { title: `${o.name} · Mindful Monkey`, desc: o.desc, on: "Courses", waText: `Hi I am interested in ${o.name}` }, (p) => `
+  page(file, { title: `${o.name} · Mindful Monkey`, desc: o.desc, on: "Courses", waText: `Hi I am interested in ${AS(o.name)}` }, (p) => `
 <section class="phero"><div class="wrap grid">
 <div><p class="eyebrow">${o.eyebrow}</p><h1>${o.h1 || o.name}</h1>
 <p class="lede" style="font-size:22px;color:var(--brown)">${o.lead}</p>
 <p style="margin-top:16px;max-width:560px">${o.intro}</p>
 <div class="meta">${o.meta.map(([k, v]) => `<div><span>${k}</span><b>${v}</b></div>`).join("")}</div>
-<div class="row-btns"><a class="btn btn-blue" href="${waCourse(o.name)}" ${ext}>${I.wa} I'm interested in ${o.name}</a>${o.brochure ? `<a class="text-link" href="${o.brochure}" ${ext}>Download the brochure ↗</a>` : ""}</div>
+<div class="row-btns"><a class="btn btn-blue" href="${waCourse(AS(o.name))}" ${ext}>${I.wa} ${o.name === "Discovery Call" ? "Book a Discovery Call" : "I'm interested in " + o.name}</a>${o.brochure ? `<a class="text-link" href="${o.brochure}" ${ext}>Download the brochure ↗</a>` : ""}</div>
 <p class="fx-note"></p></div>
 <div class="im"><img src="${p}images/${o.img}" alt="${o.imgAlt}"></div>
 </div></section>
@@ -377,7 +421,7 @@ const priceSection = (o, inner) => sec("sec bg-brown", `<div class="wrap pbox">
 <div class="rv"><p class="eyebrow">${o.pe || "Investment"}</p><h2 class="h2" style="margin-top:18px">${o.ph}</h2>${inner}</div>
 <div class="rv" style="display:flex;flex-direction:column;gap:16px;align-items:flex-start">
 <p style="color:rgba(255,255,255,.82);max-width:440px">${o.pn}</p>
-<a class="btn btn-white" href="${waCourse(o.name)}" ${ext}>${I.wa} I'm interested in ${o.name}</a>
+<a class="btn btn-white" href="${waCourse(AS(o.name))}" ${ext}>${I.wa} ${o.name === "Discovery Call" ? "Book a Discovery Call" : "I'm interested in " + o.name}</a>
 ${o.extra || ""}</div></div>`, "brown");
 
 /* LEAP */

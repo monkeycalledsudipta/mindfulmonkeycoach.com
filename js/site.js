@@ -33,6 +33,14 @@
     rv.forEach(function (el) { io.observe(el); });
   } else rv.forEach(function (el) { el.classList.add("in"); });
 
+  /* course cards turn blue on hover; touch screens have no hover, so there the card crossing the middle of the screen lights up */
+  if (window.matchMedia && window.matchMedia("(hover: none)").matches && "IntersectionObserver" in window) {
+    var cio = new IntersectionObserver(function (es) {
+      es.forEach(function (e) { e.target.classList.toggle("lit", e.isIntersecting); });
+    }, { rootMargin: "-42% 0px -42% 0px" });
+    document.querySelectorAll(".card").forEach(function (c) { cio.observe(c); });
+  }
+
   /* WhatsApp form: composes a message and opens WhatsApp (no data stored anywhere) */
   document.querySelectorAll("form.wa-form").forEach(function (f) {
     f.addEventListener("submit", function (ev) {
@@ -84,33 +92,26 @@
     }).catch(function () {});
   }
 
-  /* YouTube: muted background video on the home hero (photo stays underneath until it plays),
-     and an on-page player for every [data-yt] link. Off for ?static and reduced motion. */
-  var still = /[?&]static\b/.test(location.search) || (window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches);
+  /* Home hero: a self-hosted, silent loop (images/hero-loop*.mp4, cut from "Back to your roots" from 0:41).
+     A plain muted <video playsinline> autoplays on phones too, which the YouTube embed never did.
+     Phones get the smaller portrait crop. The photo stays underneath until the video is actually playing.
+     Off for ?static, reduced motion and data-saver. */
+  var still = /[?&]static(?:[=&#]|$)/.test(location.search) || (window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches);
   var NC = "https://www.youtube-nocookie.com/embed/";
-  var bg = document.querySelector("[data-yt-bg]");
-  if (bg && !still) {
-    var bid = bg.getAttribute("data-yt-bg");
-    var bst = parseInt(bg.getAttribute("data-start") || "0", 10) || 0;
-    var f = document.createElement("iframe");
-    // starts at data-start; when it ends we seek back to data-start (YouTube's own loop would restart at 0)
-    f.src = NC + bid + "?autoplay=1&mute=1&start=" + bst + "&controls=0&playsinline=1&rel=0&modestbranding=1&disablekb=1&iv_load_policy=3&fs=0&enablejsapi=1&origin=" + encodeURIComponent(location.origin);
-    var ytCmd = function (func, args) { try { f.contentWindow.postMessage(JSON.stringify({ event: "command", func: func, args: args || [] }), "*"); } catch (e) {} };
-    window.addEventListener("message", function (e) {
-      if (e.source !== f.contentWindow) return;
-      var d; try { d = typeof e.data === "string" ? JSON.parse(e.data) : e.data; } catch (x) { return; }
-      if (!d) return;
-      var ended = d.event === "onStateChange" ? d.info === 0 : (d.info && d.info.playerState === 0);
-      if (ended) { ytCmd("seekTo", [bst, true]); ytCmd("playVideo"); }
-    });
-    f.allow = "autoplay; encrypted-media; picture-in-picture";
-    f.title = "Background video"; f.tabIndex = -1;
-    f.addEventListener("load", function () {
-      try { f.contentWindow.postMessage(JSON.stringify({ event: "listening", id: "herobg" }), "*"); } catch (e) {}
-      ytCmd("addEventListener", ["onStateChange"]);
-      setTimeout(function () { bg.classList.add("on"); }, 2200);
-    });
-    bg.appendChild(f);
+  var hv = document.querySelector("video.hero-vid");
+  var saveData = navigator.connection && navigator.connection.saveData;
+  if (hv && !still && !saveData) {
+    var small = window.matchMedia("(max-width: 760px)").matches;
+    hv.muted = true; hv.defaultMuted = true; hv.setAttribute("muted", "");
+    hv.src = hv.getAttribute(small ? "data-sm" : "data-lg");
+    hv.preload = "auto";
+    hv.addEventListener("playing", function () { hv.classList.add("on"); });
+    var tryPlay = function () { var pr = hv.play(); if (pr && pr.catch) pr.catch(function () {}); };
+    tryPlay();
+    // iOS Low Power Mode blocks autoplay; the first touch anywhere starts it instead
+    var kick = function () { if (hv.paused) tryPlay(); window.removeEventListener("touchstart", kick); window.removeEventListener("scroll", kick); };
+    window.addEventListener("touchstart", kick, { passive: true }); window.addEventListener("scroll", kick, { passive: true });
+    document.addEventListener("visibilitychange", function () { if (!document.hidden && hv.paused) tryPlay(); });
   }
   var modal = null;
   function closeYt() { if (modal) { modal.remove(); modal = null; document.body.style.overflow = ""; } }
@@ -185,7 +186,17 @@
         e.stopPropagation();
         var was = b.classList.contains("open");
         bubs.forEach(function (x) { x.classList.remove("open"); });
-        if (!was) b.classList.add("open");
+        if (!was) {
+          // keep the tooltip on screen (bubbles near a phone's edge would push it off)
+          var tip = b.querySelector(".tip");
+          if (tip) {
+            tip.style.setProperty("--tx", "0px");
+            var tr = tip.getBoundingClientRect(), vw = document.documentElement.clientWidth, sh = 0;
+            if (tr.right > vw - 10) sh = vw - 10 - tr.right; else if (tr.left < 10) sh = 10 - tr.left;
+            tip.style.setProperty("--tx", sh + "px");
+          }
+          b.classList.add("open");
+        }
       });
     });
     document.addEventListener("click", function () { bubs.forEach(function (x) { x.classList.remove("open"); }); });

@@ -1,10 +1,11 @@
-// Storyline monkeys: the logo monkey as a gold outline, one pose per section (desktop >= 1100px).
+// Storyline monkeys: the logo monkey as a gold outline, one pose per section. Desktop uses the side
+// margins at full size; tablets and phones (< 1100px) get a smaller monkey on the same rules.
 // Rules: it never overlaps a photo, box, button or text, and it is always grounded:
 // it stands or sits on a real surface (the floor of a section's side margin, or the top edge of a
 // photo / card / box). It never floats in mid-air. The footer meditation monkey is drawn at build time.
 (function () {
   var R = window.MonkeyRig; if (!R) return;
-  var P = R.POSES, S = 1.6, PAD = 14, GOLD = "#D4A62A";
+  var P = R.POSES, S = 1.6, PAD = 14, GOLD = "#D4A62A", MOB = false, K = 1; // K scales hop/arc distances with S
   var STAND = ["ready", "scratch", "tree", "hips", "handstand"]; // for floors
   var SIT = ["sitwave", "peekaboo"];                              // for sitting on a box edge
   var BOX = "img,.vid,.banner,.card,.form,.orbit .me,.t,.sc,.igrid>div,.ptable,.im,.status,.callout";
@@ -64,16 +65,19 @@
   }
   function place() {
     clear();
-    var W = document.documentElement.clientWidth; if (W < 1100) return;
+    var W = document.documentElement.clientWidth;
+    MOB = W < 1100; S = W < 600 ? 0.62 : MOB ? 0.9 : 1.6; PAD = MOB ? 8 : 14; K = S / 1.6;
     var B = blockers();
     var secs = [].slice.call(document.querySelectorAll("main > section")).filter(function (s) { return !s.classList.contains("workout") && !s.classList.contains("hero"); });
     var si = 0, ti = 0, side = 0;
     secs.forEach(function (sec) {
-      var r = doc(sec.getBoundingClientRect()); if (r.y1 - r.y0 < 260) return;
+      var r = doc(sec.getBoundingClientRect()); if (r.y1 - r.y0 < (MOB ? 180 : 260)) return;
       var next = sec.nextElementSibling, wavyBelow = next && next.classList.contains("wave-top");
       // floor: the visible edge between this section and the next (a wave curve, a colour change or a rule line)
       var cands = [];
-      var gx = side ? [[90, 1], [W - 90, -1]] : [[W - 90, -1], [90, 1]];
+      var m = MOB ? Math.round(32 * S / 0.62) : 90; // phones: just inside the page gutter
+      var gx = side ? [[m, 1], [W - m, -1]] : [[W - m, -1], [m, 1]];
+      if (MOB) gx.push([Math.round(W * (side ? 0.3 : 0.7)), side ? 1 : -1]);
       var edgeVisible = next && (wavyBelow || bg(next) !== bg(sec) || parseFloat(getComputedStyle(next).borderTopWidth) > 0);
       if (edgeVisible) gx.forEach(function (g) {
         var y = wavyBelow ? curveY(next.querySelector(".wave"), g[0]) : r.y1;
@@ -84,14 +88,15 @@
         if (!visible(e)) return;
         var q = doc(e.getBoundingClientRect());
         if (q.x1 - q.x0 < 180) return;
-        cands.push({ x: q.x1 - 50, y: q.y0, face: -1, kind: "sit" });
-        cands.push({ x: q.x0 + 50, y: q.y0, face: 1, kind: "sit" });
+        var ins = Math.round(50 * K) + (MOB ? 6 : 0);
+        cands.push({ x: q.x1 - ins, y: q.y0, face: -1, kind: "sit" });
+        cands.push({ x: q.x0 + ins, y: q.y0, face: 1, kind: "sit" });
       });
       for (var i = 0; i < cands.length; i++) {
         var c = cands[i];
         var pose = c.kind === "sit" ? SIT[ti % SIT.length] : STAND[si % STAND.length];
         var g = geom(pose, c.x, c.y, c.face);
-        if (g.box.x0 < 6 || g.box.x1 > W - 6 || g.box.y0 < r.y0 + 20) continue;
+        if (g.box.x0 < 4 || g.box.x1 > W - 4 || g.box.y0 < r.y0 + (MOB ? 10 : 20)) continue;
         if (!clearOf(g.box, B)) continue;
         B.push(put(pose, c.x, c.y, c.face, sec));
         if (c.kind === "sit") ti++; else si++;
@@ -132,7 +137,8 @@
     // timing key: where the scroll line must be for the monkey to be at a spot (the footer must be reachable)
     var maxLine = document.documentElement.scrollHeight - innerHeight * 0.38 - 4;
     spots.forEach(function (sp) { sp.ty = Math.min(sp.y, maxLine); });
-    for (var j = spots.length - 2; j >= 0; j--) if (spots[j].ty > spots[j + 1].ty - 120) spots[j].ty = spots[j + 1].ty - 120;
+    var gapMin = MOB ? 90 : 120;
+    for (var j = spots.length - 2; j >= 0; j--) if (spots[j].ty > spots[j + 1].ty - gapMin) spots[j].ty = spots[j + 1].ty - gapMin;
     trav = document.createElementNS("http://www.w3.org/2000/svg", "svg");
     trav.setAttribute("class", "mkr mk-trav"); trav.setAttribute("aria-hidden", "true");
     trav.setAttribute("style", "position:absolute;left:0;top:0;width:1px;height:1px;overflow:visible;z-index:6;pointer-events:none;transition:none;will-change:contents");
@@ -179,12 +185,13 @@
     var n = spots.length;
     var sc = function (s) { return s.scale || S; };
     var arrived = false;
-    if (line < spots[0].ty - 420) { trav.style.opacity = "0"; }
+    var LEAD = 420 * Math.max(K, 0.6);
+    if (line < spots[0].ty - LEAD) { trav.style.opacity = "0"; }
     else if (line < spots[0].ty) {
       // the opening leap: drops in from above into the first pose
-      var t = ease((line - (spots[0].ty - 420)) / 420), a = spots[0];
+      var t = ease((line - (spots[0].ty - LEAD)) / LEAD), a = spots[0];
       var pose = t < 0.7 ? P.leap : R.blend(P.leap, P[a.pose], (t - 0.7) / 0.3);
-      draw(pose, a.x, a.y - (1 - t) * 260, a.face, S, Math.min(1, t * 2), a.fill);
+      draw(pose, a.x, a.y - (1 - t) * 260 * K, a.face, S, Math.min(1, t * 2), a.fill);
     } else {
       var i = 0; while (i < n - 1 && line >= spots[i + 1].ty) i++;
       var A = spots[i];
@@ -194,20 +201,20 @@
         if (u < 0.45) draw(P[A.pose], A.x, A.y, A.face, sc(A), 1, A.fill);       // pause in this section's pose
         else {
           var t2 = ease((u - 0.45) / 0.55);
-          var sameSide = Math.abs(B.x - A.x) < 160 && B !== foot;
+          var sameSide = Math.abs(B.x - A.x) < 160 * K && B !== foot;
           var mid = t2 < 0.5 ? R.blend(P[A.pose], P.leap, t2 * 2) : R.blend(P.leap, P[B.pose], (t2 - 0.5) * 2);
           var s = sc(A) + (sc(B) - sc(A)) * t2;
           if (sameSide) {
             // arc down the margin, bowing outwards toward the page edge
-            var out = (A.x > innerWidth / 2 ? 1 : -1) * 40 * Math.sin(Math.PI * t2);
-            var x = A.x + (B.x - A.x) * t2 + out, y = A.y + (B.y - A.y) * t2 - 140 * Math.sin(Math.PI * t2);
+            var out = (A.x > innerWidth / 2 ? 1 : -1) * 40 * K * Math.sin(Math.PI * t2);
+            var x = A.x + (B.x - A.x) * t2 + out, y = A.y + (B.y - A.y) * t2 - 140 * K * Math.sin(Math.PI * t2);
             draw(mid, x, y, t2 < 0.5 ? A.face : B.face, s, 1, bgAt(y - 40));
           } else if (t2 < 0.5) {
             // hop up out of the current spot and fade
-            var k = t2 * 2; draw(mid, A.x, A.y - 160 * k, A.face, sc(A), 1 - k, A.fill);
+            var k = t2 * 2; draw(mid, A.x, A.y - 160 * K * k, A.face, sc(A), 1 - k, A.fill);
           } else {
             // drop into the next spot and fade in
-            var k2 = (t2 - 0.5) * 2; draw(mid, B.x, B.y - 160 * (1 - k2), B.face, sc(B), k2, B === foot ? foot.fill : B.fill);
+            var k2 = (t2 - 0.5) * 2; draw(mid, B.x, B.y - 160 * K * (1 - k2), B.face, sc(B), k2, B === foot ? foot.fill : B.fill);
           }
         }
       }
@@ -215,7 +222,12 @@
     if (foot) foot.el.style.opacity = arrived ? "" : "0";
   }
   window.placeMonkeys = place;
-  var tm; window.addEventListener("resize", function () { clearTimeout(tm); tm = setTimeout(place, 300); });
+  // phones fire resize when the address bar shows or hides; re-place only when the width really changes
+  var tm, lastW = document.documentElement.clientWidth;
+  window.addEventListener("resize", function () {
+    var w = document.documentElement.clientWidth; if (w === lastW) return; lastW = w;
+    clearTimeout(tm); tm = setTimeout(place, 300);
+  });
   var go = function () { (document.fonts && document.fonts.ready ? document.fonts.ready : Promise.resolve()).then(function () { setTimeout(place, 150); }); };
   if (document.readyState === "complete") go(); else window.addEventListener("load", go);
 })();

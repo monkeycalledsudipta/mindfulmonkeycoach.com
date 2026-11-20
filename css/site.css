@@ -85,9 +85,8 @@ main>section:has(+ .wave-top){padding-bottom:170px}
 .hero h1 em{color:var(--blush)}
 .hero .lede{color:rgba(255,255,255,.88);margin:28px 0 38px}
 .hero .eyebrow{color:var(--gold);margin-bottom:26px}
-.hero-vid{position:absolute;inset:0;z-index:0;overflow:hidden;pointer-events:none;container-type:size}
-.hero-vid iframe{position:absolute;top:50%;left:50%;width:max(100cqw,177.78cqh);height:max(100cqh,56.25cqw);transform:translate(-50%,-50%) scale(1.18);border:0;opacity:0;transition:opacity 1.4s ease}
-.hero-vid.on iframe{opacity:1}
+.hero-vid{position:absolute;inset:0;z-index:0;width:100%;height:100%;object-fit:cover;object-position:center 40%;pointer-events:none;opacity:0;transition:opacity 1.4s ease;background:transparent}
+.hero-vid.on{opacity:1}
 .hero h1.strong{display:flex;align-items:last baseline;gap:.14em;max-width:none;font-size:clamp(72px,10.5vw,160px);line-height:.86;letter-spacing:-.02em;margin-bottom:.12em}
 .strong .three{display:flex;flex-direction:column;font-size:.258em;line-height:1;letter-spacing:-.02em}
 .strong .three em{font-style:normal;color:inherit}
@@ -129,11 +128,11 @@ main>section:has(+ .wave-top){padding-bottom:170px}
 .card .more{font:500 12px "DM Mono";letter-spacing:.06em;text-transform:uppercase;color:var(--blue);text-align:center;margin-top:12px}
 /* all course cards white; they turn blue on hover / keyboard focus */
 .card,.card h3,.card .price b,.card .price span,.card .more,.card .btn-blue{transition:background-color .3s,border-color .3s,color .3s,transform .3s,box-shadow .3s}
-.card:hover,.card:focus-within{background:var(--blue);border-color:var(--blue);color:rgba(255,255,255,.85)}
-.card:hover h3,.card:focus-within h3,.card:hover .price b,.card:focus-within .price b{color:#fff}
-.card:hover .price span,.card:focus-within .price span{color:rgba(255,255,255,.7)}
-.card:hover .btn-blue,.card:focus-within .btn-blue{background:#fff;color:var(--brown)}
-.card:hover .more,.card:focus-within .more{color:#fff}
+.card:hover,.card:focus-within,.card.lit{background:var(--blue);border-color:var(--blue);color:rgba(255,255,255,.85)}
+.card:hover h3,.card:focus-within h3,.card:hover .price b,.card:focus-within .price b,.card.lit h3,.card.lit .price b{color:#fff}
+.card:hover .price span,.card:focus-within .price span,.card.lit .price span{color:rgba(255,255,255,.7)}
+.card:hover .btn-blue,.card:focus-within .btn-blue,.card.lit .btn-blue{background:#fff;color:var(--brown)}
+.card:hover .more,.card:focus-within .more,.card.lit .more{color:#fff}
 .fx-note{font-size:13px;color:var(--brown-mute);margin-top:10px}
 
 /* form band */
@@ -267,8 +266,8 @@ main>section:has(+ .wave-top){padding-bottom:170px}
   font:500 13px/1.2 "DM Mono";letter-spacing:.02em;transition:background .3s,color .3s,box-shadow .3s;will-change:transform;user-select:none;outline:none}
 .bub:hover,.bub.open,.bub:focus-visible{background:radial-gradient(circle at 32% 28%,#fff 0%,#FBE3E9 22%,var(--blush) 62%,#E9AABA 100%);color:var(--brown);
   box-shadow:inset -6px -10px 18px rgba(217,124,147,.25),inset 6px 8px 14px rgba(255,255,255,.9),0 14px 28px rgba(20,33,61,.18)}
-.bub .tip{position:absolute;left:50%;bottom:calc(100% + 12px);transform:translateX(-50%) translateY(6px);width:220px;background:var(--blue);color:#fff;border-radius:14px;padding:12px 14px;font:400 13.5px/1.45 "DM Sans";letter-spacing:0;opacity:0;pointer-events:none;transition:opacity .2s,transform .2s;z-index:5}
-.bub.open .tip{opacity:1;transform:translateX(-50%) translateY(0)}
+.bub .tip{position:absolute;left:50%;bottom:calc(100% + 12px);transform:translateX(calc(-50% + var(--tx,0px))) translateY(6px);width:220px;background:var(--blue);color:#fff;border-radius:14px;padding:12px 14px;font:400 13.5px/1.45 "DM Sans";letter-spacing:0;opacity:0;pointer-events:none;transition:opacity .2s,transform .2s;z-index:5}
+.bub.open .tip{opacity:1;transform:translateX(calc(-50% + var(--tx,0px))) translateY(0)}
 
 /* about: philosophy */
 .pr{display:grid;grid-template-columns:repeat(4,1fr);border-top:1px solid rgba(255,255,255,.2);margin-top:60px}
@@ -507,3 +506,43 @@ footer .base a:hover{color:#fff}
   .btn{white-space:normal;text-align:center;line-height:1.35}
   .ptable th,.ptable td{padding:12px 10px}
 }
+
+/* ---------- edits 2026-11-20 ---------- */
+/* About: "Care over cure" under the story timeline, same style as "Faith over fear" */
+.tl-after{margin-top:44px}
+/* About: Articles I read */
+.rgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:22px}
+.rcard{display:flex;flex-direction:column;border-radius:22px;overflow:hidden;background:#fff;border:1px solid var(--line);transition:transform .25s,box-shadow .25s,border-color .25s}
+.rcard:hover{transform:translateY(-4px);box-shadow:0 20px 40px rgba(20,33,61,.12);border-color:var(--blue)}
+.rim{display:block;aspect-ratio:16/9;overflow:hidden;background:var(--blush-soft)}
+.rim img{width:100%;height:100%;object-fit:cover;transition:transform .4s}
+.rcard:hover .rim img{transform:scale(1.04)}
+.rbd{display:flex;flex-direction:column;padding:22px 24px 24px;flex:1}
+.rbd small{font:500 11px "DM Mono";letter-spacing:.12em;text-transform:uppercase;color:var(--blue);margin-bottom:10px}
+.rbd b{font:400 26px/1.15 Fraunces;letter-spacing:-.02em;color:var(--brown);margin-bottom:10px}
+.rd{font-size:15px;line-height:1.55;flex:1}
+.rmore{font:500 12px "DM Mono";letter-spacing:.06em;text-transform:uppercase;color:var(--blue);margin-top:18px}
+/* Courses: upcoming bootcamps, retreats and workshops */
+.events .head-row p{color:rgba(255,255,255,.82)}
+.evgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:22px}
+.ev{background:#fff;border-radius:22px;overflow:hidden;display:flex;flex-direction:column;color:var(--brown-text)}
+.ev-im{position:relative;height:200px}
+.ev-im img{width:100%;height:100%;object-fit:cover}
+.ev-im .tag{background:var(--gold);color:var(--brown)}
+.ev-bd{padding:22px 22px 24px;display:flex;flex-direction:column;flex:1}
+.ev-when{font:500 11.5px/1.5 "DM Mono";letter-spacing:.08em;text-transform:uppercase;color:var(--blue);margin-bottom:10px}
+.ev h3{font-size:30px;margin-bottom:10px;color:var(--brown)}
+.ev p.d{font-size:15px;line-height:1.55;flex:1}
+.ev .btn{align-self:flex-start;margin-top:4px}
+.ev .price{margin:16px 0}
+.ev-empty{display:flex;justify-content:space-between;align-items:center;gap:30px;flex-wrap:wrap;border:1px dashed rgba(255,255,255,.45);border-radius:22px;padding:34px 36px;background:rgba(255,255,255,.06)}
+.ev-empty b{display:block;font:400 30px/1.15 Fraunces;letter-spacing:-.02em;color:#fff;margin-bottom:10px}
+.ev-empty p{color:rgba(255,255,255,.82);max-width:560px}
+@media (max-width:1180px){.rgrid,.evgrid{grid-template-columns:1fr 1fr}}
+@media (max-width:640px){.rgrid,.evgrid{grid-template-columns:1fr}.ev-empty{padding:26px 22px}.ev-empty b{font-size:26px}.tl-after{margin-top:34px}}
+@media (max-width:560px){.rbd small,.ev-when{font-size:12px}}
+/* phones: keep the outer bubbles inside the screen */
+@media (max-width:560px){.orbit{margin:0 26px}}
+/* reading list: two cards fill the row instead of leaving an empty third column */
+.rgrid.n2{grid-template-columns:1fr 1fr}
+@media (max-width:640px){.rgrid.n2{grid-template-columns:1fr}}

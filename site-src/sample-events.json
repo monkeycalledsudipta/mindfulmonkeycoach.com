@@ -1,0 +1,8 @@
+[
+  { "type": "Retreat", "title": "Back to Your Roots", "dates": "12 to 15 Feb 2027", "end": "2027-02-15", "where": "North Goa", "price": 28000, "unit": "per person, stay included",
+    "d": "Four days of movement, play, natural food and time outdoors, away from screens." },
+  { "type": "Bootcamp", "title": "Parkour Foundations", "dates": "Every Sat in January", "end": "2027-01-30", "where": "Panjim", "price": 6000, "unit": "4 sessions",
+    "d": "Landings, vaults and balance from scratch, in a small outdoor group." },
+  { "type": "Workshop", "title": "Breath and Mobility", "dates": "7 Dec 2026, 7 to 9 AM IST", "end": "2026-12-07", "where": "Online, Zoom",
+    "price": 1500, "d": "Two hours of breathwork and joint mobility you can repeat at home." }
+]
